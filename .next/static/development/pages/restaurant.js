@@ -6607,25 +6607,25 @@ var DishCardWrapper = react_pose__WEBPACK_IMPORTED_MODULE_2__["default"].article
 });
 var StyledDishCardWrapper = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "DishCard__StyledDishCardWrapper",
-  componentId: "sc-1nb8way-0"
+  componentId: "p3u3wy-0"
 })(["width:100%;height:auto;position:relative;border-radius:4px;overflow:hidden;background:#FFFFFF;display:flex;flex-flow:column nowrap;scale:1;"]);
 var DishCardImage = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "DishCard__DishCardImage",
-  componentId: "sc-1nb8way-1"
+  componentId: "p3u3wy-1"
 })(["width:100%;height:164px;display:flex;background:#9f9f9f;background-image:url(", ");background-size:cover;background-position:center;"], function (props) {
   return props.image;
 });
 var DishCardContent = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "DishCard__DishCardContent",
-  componentId: "sc-1nb8way-2"
+  componentId: "p3u3wy-2"
 })(["width:100%;display:flex;flex:1;flex-flow:column nowrap;padding:16px;box-sizing:border-box;"]);
 var DishCardTitle = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].h3.withConfig({
   displayName: "DishCard__DishCardTitle",
-  componentId: "sc-1nb8way-3"
+  componentId: "p3u3wy-3"
 })(["font-size:1rem;font-weight:700;color:#0f0f0f;width:100%;display:flex;justify-content:space-between;margin:0;"]);
 var DishCardSubtitle = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].span.withConfig({
   displayName: "DishCard__DishCardSubtitle",
-  componentId: "sc-1nb8way-4"
+  componentId: "p3u3wy-4"
 })(["font-size:.875rem;font-weight:400;color:#9f9f9f;"]);
 
 var DishCard =
@@ -6673,26 +6673,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var styled_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! styled-components */ "./node_modules/styled-components/dist/styled-components.es.js");
-var _jsxFileName = "/Users/Chris/dishful-infinity/components/Profile.jsx";
 
 
 var ProfileWrapper = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Profile__ProfileWrapper",
-  componentId: "sc-12ke1u2-0"
+  componentId: "sc-1xn8wk8-0"
 })(["width:100%;height:200px;position:fixed;top:0;left:0;right:0;z-index:-1;background:#f0f0f0;background-image:url(", ");background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;&::before{content:\"\";width:100%;height:100%;position:absolute;left:0;right:0;top:0;bottom:0;display:block;background:rgba(0,0,0,.32);}"], function (props) {
   return props.background;
 });
 var ProfileContent = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Profile__ProfileContent",
-  componentId: "sc-12ke1u2-1"
+  componentId: "sc-1xn8wk8-1"
 })(["display:inline-flex;align-items:flex-start;flex-flow:column nowrap;text-align:right;z-index:4;"]);
 var ProfileTitle = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].h1.withConfig({
   displayName: "Profile__ProfileTitle",
-  componentId: "sc-12ke1u2-2"
+  componentId: "sc-1xn8wk8-2"
 })(["font-size:1.5rem;font-weight:700;color:#fff;margin:0;display:inline-flex;"]);
 var ProfileSubtitle = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].span.withConfig({
   displayName: "Profile__ProfileSubtitle",
-  componentId: "sc-12ke1u2-3"
+  componentId: "sc-1xn8wk8-3"
 })(["font-size:1rem;font-weight:500;color:#fff;"]);
 
 var Profile = function Profile(_ref) {
@@ -6702,31 +6701,8 @@ var Profile = function Profile(_ref) {
       background = _ref.background,
       address = _ref.address;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ProfileWrapper, {
-    background: background,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 57
-    },
-    __self: this
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ProfileContent, {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 58
-    },
-    __self: this
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ProfileTitle, {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 59
-    },
-    __self: this
-  }, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ProfileSubtitle, {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 62
-    },
-    __self: this
-  }, cuisine, " \xB7 ", priceRange, " \xB7 ", address)));
+    background: background
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ProfileContent, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ProfileTitle, null, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ProfileSubtitle, null, cuisine, " \xB7 ", priceRange, " \xB7 ", address)));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Profile);
@@ -6983,53 +6959,53 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var SwiperWrapper = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Swiper__SwiperWrapper",
-  componentId: "olrsc9-0"
+  componentId: "fl5dp0-0"
 })(["width:100vw;height:100vh;position:absolute;background:#0f0f0f;display:flex;flex-flow:column nowrap;color:#fff;"]);
 var SwiperCollapse = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].i.withConfig({
   displayName: "Swiper__SwiperCollapse",
-  componentId: "olrsc9-1"
+  componentId: "fl5dp0-1"
 })(["width:24px;height:24px;color:#fff;cursor:pointer;display:block;margin:16px 0 0 16px;"]);
 var SwiperHeader = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Swiper__SwiperHeader",
-  componentId: "olrsc9-2"
+  componentId: "fl5dp0-2"
 })(["width:100%;padding:16px;box-sizing:border-box;display:flex;flex-flow:row nowrap;justify-content:space-between;"]);
 var SwiperTitle = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].h3.withConfig({
   displayName: "Swiper__SwiperTitle",
-  componentId: "olrsc9-3"
+  componentId: "fl5dp0-3"
 })(["font-size:1.5rem;font-weight:700;color:#fff;margin:0;"]);
 var SwiperStatus = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Swiper__SwiperStatus",
-  componentId: "olrsc9-4"
+  componentId: "fl5dp0-4"
 })(["font-size:1rem;font-weight:400;color:#fff;display:flex;align-items:center;& strong{font-weight:700;}"]);
 var SwiperSlick = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Swiper__SwiperSlick",
-  componentId: "olrsc9-5"
+  componentId: "fl5dp0-5"
 })(["width:100%;"]);
 var DishSlide = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Swiper__DishSlide",
-  componentId: "olrsc9-6"
+  componentId: "fl5dp0-6"
 })(["width:100%;height:100%;display:flex;flex-flow:column nowrap;"]);
 var DishSlideImage = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Swiper__DishSlideImage",
-  componentId: "olrsc9-7"
+  componentId: "fl5dp0-7"
 })(["width:100vw;height:calc(100vw/1.7777);display:block;background-image:url(", ");background-size:cover;background-position:center;"], function (props) {
   return props.image;
 });
 var DishSlideContent = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "Swiper__DishSlideContent",
-  componentId: "olrsc9-8"
+  componentId: "fl5dp0-8"
 })(["width:100%;display:flex;flex:1;flex-flow:column nowrap;padding:16px;box-sizing:border-box;"]);
 var DishSlideTitle = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].h3.withConfig({
   displayName: "Swiper__DishSlideTitle",
-  componentId: "olrsc9-9"
+  componentId: "fl5dp0-9"
 })(["font-size:1.25rem;font-weight:700;color:#fff;width:100%;display:flex;justify-content:space-between;margin:0;"]);
 var DishSlideSubtitle = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].span.withConfig({
   displayName: "Swiper__DishSlideSubtitle",
-  componentId: "olrsc9-10"
+  componentId: "fl5dp0-10"
 })(["font-size:1rem;font-weight:400;color:#fff;margin-bottom:8px;"]);
 var DishSlideDescription = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].p.withConfig({
   displayName: "Swiper__DishSlideDescription",
-  componentId: "olrsc9-11"
+  componentId: "fl5dp0-11"
 })(["font-size:1rem;font-weight:400;color:#fff;padding:0;margin:0;box-sizing:border-box;"]);
 
 var Swiper =
@@ -66588,7 +66564,7 @@ function (_Component) {
 
               case 5:
                 restaurants = _context.sent;
-                restaurant = restaurants[0];
+                restaurant = restaurants[0] || {};
                 return _context.abrupt("return", {
                   restaurant: restaurant,
                   query: query
@@ -66634,7 +66610,7 @@ function (_Component) {
 
 /***/ }),
 
-/***/ 3:
+/***/ 4:
 /*!***********************************!*\
   !*** multi ./pages/restaurant.js ***!
   \***********************************/
@@ -66659,5 +66635,5 @@ module.exports = dll_b928a9844539d7a67b28;
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js"]]]));;
+},[[4,"static/runtime/webpack.js"]]]));;
 //# sourceMappingURL=restaurant.js.map

@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "node server.js",
     "heroku-postbuild": "next build"
   },
   "dependencies": {
@@ -21,6 +21,9 @@
     "react-slick": "^0.23.1",
     "sticky-events": "^2.2.0",
     "styled-components": "^2.1.0"
+  },
+  "engines": {
+    "node": "6.11.x"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.1.5"

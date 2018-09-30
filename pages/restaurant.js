@@ -168,7 +168,7 @@ class Restaurant extends Component {
     }).catch(err => {
       console.log(err);
     })
-    let restaurant = restaurants[0]
+    let restaurant = restaurants[0] || {}
     return { restaurant,  query }
   }
 
