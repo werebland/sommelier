@@ -1,31 +1,74 @@
 const { createServer } = require('http')
-const { parse } = require('url')
+const path = require('path');
+const url = require('url');
 const next = require('next')
 const express = require('express')
 
-const port = parseInt(process.env.PORT, 10) || 3000
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
 
-app.prepare()
-  .then(() => {
-    const server = express()
+const dev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT || 3000;
 
-    server.get('/:username', (req, res) => {
-      return app.render(req, res, '/restaurant', { username: req.params.username })
-    })
+if (!dev && cluster.isMaster) {
+  console.log(`Node cluster master ${process.pid} is running`);
 
-    server.get('/:username/:section', (req, res) => {
-      return app.render(req, res, '/section', { username: req.params.username, section: req.params.section })
-    })
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
 
-    server.get('*', (req, res) => {
-      return handle(req, res)
-    })
+  cluster.on('exit', (worker, code, signal) => {
+    console.error(`Node cluster worker ${worker.process.pid} exited: code ${code}, signal ${signal}`);
+  });
 
-    server.listen(port, (err) => {
-      if (err) throw err
-      console.log(`> Ready on http://localhost:${port}`)
-    })
-  })
+} else {
+  const app = next({ dir: '.', dev });
+  const nextHandler = app.getRequestHandler();
+
+  app.prepare()
+    .then(() => {
+      const server = express();
+
+      if (!dev) {
+        // Enforce SSL & HSTS in production
+        server.use(function(req, res, next) {
+          var proto = req.headers["x-forwarded-proto"];
+          if (proto === "https") {
+            res.set({
+              'Strict-Transport-Security': 'max-age=31557600' // one-year
+            });
+            return next();
+          }
+          res.redirect("https://" + req.headers.host + req.url);
+        });
+      }
+
+      // Example server-side routing
+      server.get('/', (req, res) => {
+        return app.render(req, res, '/', { })
+      })
+
+      server.get('/:username', (req, res) => {
+        return app.render(req, res, '/restaurant', { username: req.params.username })
+      })
+
+      server.get('/:username/:section', (req, res) => {
+        return app.render(req, res, '/section', { username: req.params.username, section: req.params.section })
+      })
+
+      // Default catch-all renders Next app
+      server.get('*', (req, res) => {
+        // res.set({
+        //   'Cache-Control': 'public, max-age=3600'
+        // });
+        const parsedUrl = url.parse(req.url, true);
+        nextHandler(req, res, parsedUrl);
+      });
+
+      server.listen(port, (err) => {
+        if (err) throw err;
+        console.log(`Listening on http://localhost:${port}`);
+      });
+    });
+}

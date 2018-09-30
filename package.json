@@ -7,14 +7,16 @@
     "build": "next build",
     "postinstall": "npm run build",
     "heroku-postbuild": "next build",
-    "start": "node server.js"
+    "start": "node server.js -p ${PORT}"
   },
   "dependencies": {
+    "babel-plugin-styled-components": "^1.8.0",
     "express": "^4.16.3",
     "firebase": "^5.5.2",
     "fuse.js": "^3.2.1",
     "lodash": "^4.17.11",
     "next": "^7.0.1",
+    "path": "^0.12.7",
     "popmotion-pose": "^3.3.1",
     "re-base": "^4.0.0",
     "react": "16.5.1",
@@ -26,9 +28,6 @@
   },
   "engines": {
     "node": "10.5.x"
-  },
-  "devDependencies": {
-    "babel-plugin-styled-components": "^1.8.0"
   },
   "license": "ISC"
 }
