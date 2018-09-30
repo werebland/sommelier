@@ -46,7 +46,7 @@ if (!dev && cluster.isMaster) {
 
       // Example server-side routing
       server.get('/', (req, res) => {
-        return app.render(req, res, '/', { })
+        return app.render(req, res, '/index', { })
       })
 
       server.get('/:username', (req, res) => {
