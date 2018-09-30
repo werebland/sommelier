@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "node server.js",
+    "prestart": "next build",
     "build": "next build",
+    "postinstall": "npm run build",
     "heroku-postbuild": "next build",
     "start": "node server.js"
   },
