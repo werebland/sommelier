@@ -9,21 +9,23 @@ const SearchWrapper = posed.div({
     width: '100vw',
     height: '100vh',
     y: -36,
+    x: -16,
   },
   collapsed: {
-    width: 'calc(100vw - 32px)',
+    width: ({ width }) => width,
     height: '40px',
     y: -20,
+    x: 0,
   }
 })
 
 const StyledSearchWrapper = styled(SearchWrapper)`
-  width: calc(100vw - 32px);
+  width: ${props => props.width};
   height: 40px;
   background: #FFFFFF;
   box-shadow: 0 2px 16px -2px rgba(0,0,0,0.32);
   border-radius: ${props => props.expanded ? '0' : '4px'};
-  margin: auto;
+  margin-left: 16px;
   position: ${props => props.expanded ? 'fixed' : 'sticky'};
   transform: translateY(-20px);
   top: 36px;
@@ -92,7 +94,7 @@ const SearchResults = styled.div`
   display: flex;
   flex-flow: column nowrap;
   overflow: scroll;
-  margin-left: 16px;
+  margin-left: -16px;
   padding: 16px;
   box-sizing: border-box;
 `;
@@ -167,7 +169,11 @@ class Search extends Component {
     var result = fuse.search(this.state.term);
 
     return (
-      <StyledSearchWrapper pose={this.state.expanded ? 'expanded' : 'collapsed'} expanded={this.state.expanded} className="sticky-events">
+      <StyledSearchWrapper
+        pose={this.state.expanded ? 'expanded' : 'collapsed'}
+        expanded={this.state.expanded}
+        width={this.props.width}
+        style={{width: this.props.width}}>
         <SearchInputWrapper expanded={this.state.expanded}>
           <SearchIcon className="material-icons" onClick={() => this.state.expanded === true && this.handleCollapse()} expanded={this.state.expanded}>
             {this.state.expanded ? 'close' : 'search'}

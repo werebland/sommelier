@@ -18,7 +18,7 @@ const RestaurantWrapper = styled.div`
   background: #f7f7f7;
 `;
 
-const ActionButton = styled.div`
+const ActionButton = styled.a`
   position: fixed;
   top: 16px;
   right: 16px;
@@ -32,6 +32,11 @@ const ActionButton = styled.div`
   background: #FFFFFF;
   box-shadow: 0 2px 16px -2px rgba(0,0,0,0.32);
   cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #0f0f0f;
+  z-index: 8;
 `;
 
 const Scroller = styled.div`
@@ -146,6 +151,7 @@ class Restaurant extends Component {
       dishes: [],
       filteredDishes: [],
       isSearching: false,
+      isSticky: false,
     };
     this.actionButton = React.createRef()
   }
@@ -169,6 +175,24 @@ class Restaurant extends Component {
   componentDidMount() {
     const actionButtonWidth = this.actionButton.current.offsetWidth
     this.fetchDishes()
+    if (window) {
+      window.addEventListener('scroll', this.handleScroll.bind(this));
+    }
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener('scroll', this.handleScroll.bind(this));
+  }
+
+  handleScroll() {
+    let scrollY = window.scrollY
+    if (scrollY >= 160) {
+      this.setState({ isSticky: true})
+    } else {
+      this.setState({
+        isSticky: false
+      })
+    }
   }
 
   fetchDishes() {
@@ -209,13 +233,25 @@ class Restaurant extends Component {
     return (
       <RestaurantWrapper>
         <Head>
-          <title>{this.props.restaurant.title}</title>
+          <title>What to eat at {this.props.restaurant.title} - {this.props.restaurant.address.street}, {this.props.restaurant.address.city}</title>
           <link rel="stylesheet" type="text/css" charset="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
           <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
         </Head>
-        <ActionButton innerRef={this.actionButton}>
-          Call
-        </ActionButton>
+        {this.props.restaurant.action === "call" &&
+          <ActionButton innerRef={this.actionButton} href={`tel: ${this.props.restaurant.phone}`}>
+            Call
+          </ActionButton>
+        }
+        {this.props.restaurant.action === "reserve" &&
+          <ActionButton innerRef={this.actionButton} target="black" href={this.props.restaurant.reserve}>
+            Reserve
+          </ActionButton>
+        }
+        {this.props.restaurant.action === "order" &&
+          <ActionButton innerRef={this.actionButton} target="blank" href={this.props.restaurant.order}>
+            Order
+          </ActionButton>
+        }
         <Profile
           title={this.props.restaurant.title}
           cuisine={this.props.restaurant.cuisine}
@@ -225,6 +261,7 @@ class Restaurant extends Component {
         <Scroller>
           <Search
             dishes={this.state.dishes}
+            width={this.state.isSticky ? `calc(100vw - 32px - ${this.actionButton.current.offsetWidth}px - 16px)` : 'calc(100vw - 32px)'}
             handleExpandSearch={() => this.setState({ isSearching: true })}
             handleCollapseSearch={() => this.setState({ isSearching: false })}
             handleDishCardClick={(id, result) => this.setState({ activeDish: id, results: result })}/>

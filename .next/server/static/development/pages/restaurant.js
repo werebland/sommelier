@@ -325,18 +325,25 @@ var SearchWrapper = react_pose__WEBPACK_IMPORTED_MODULE_2___default.a.div({
   expanded: {
     width: '100vw',
     height: '100vh',
-    y: -36
+    y: -36,
+    x: -16
   },
   collapsed: {
-    width: 'calc(100vw - 32px)',
+    width: function width(_ref) {
+      var _width = _ref.width;
+      return _width;
+    },
     height: '40px',
-    y: -20
+    y: -20,
+    x: 0
   }
 });
 var StyledSearchWrapper = styled_components__WEBPACK_IMPORTED_MODULE_1___default()(SearchWrapper).withConfig({
   displayName: "Search__StyledSearchWrapper",
-  componentId: "sc-30z2li-0"
-})(["width:calc(100vw - 32px);height:40px;background:#FFFFFF;box-shadow:0 2px 16px -2px rgba(0,0,0,0.32);border-radius:", ";margin:auto;position:", ";transform:translateY(-20px);top:36px;overflow:hidden;box-sizing:border-box;padding:", ";z-index:8;"], function (props) {
+  componentId: "sc-1891do4-0"
+})(["width:", ";height:40px;background:#FFFFFF;box-shadow:0 2px 16px -2px rgba(0,0,0,0.32);border-radius:", ";margin-left:16px;position:", ";transform:translateY(-20px);top:36px;overflow:hidden;box-sizing:border-box;padding:", ";z-index:8;"], function (props) {
+  return props.width;
+}, function (props) {
   return props.expanded ? '0' : '4px';
 }, function (props) {
   return props.expanded ? 'fixed' : 'sticky';
@@ -345,15 +352,15 @@ var StyledSearchWrapper = styled_components__WEBPACK_IMPORTED_MODULE_1___default
 });
 var SearchInputWrapper = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.div.withConfig({
   displayName: "Search__SearchInputWrapper",
-  componentId: "sc-30z2li-1"
+  componentId: "sc-1891do4-1"
 })(["width:100%;height:40px;position:relative;box-sizing:border-box;padding:0 0 0 40px;"]);
 var SearchInput = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.input.withConfig({
   displayName: "Search__SearchInput",
-  componentId: "sc-30z2li-2"
+  componentId: "sc-1891do4-2"
 })(["width:100%;height:100%;max-height:40px;border-radius:0;border:0;box-shadow:none;appearance:none;position:relative;display:flex;align-items:center;box-sizing:border-box;padding:0 8px;margin:0;font-size:1rem;font-weight:400;color:#0f0f0f;transition:0.4s ease-out all;&::placeholder{font-size:1rem;font-weight:400;color:#9f9f9f;}&:focus{outline:none;}"]);
 var SearchIcon = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.i.withConfig({
   displayName: "Search__SearchIcon",
-  componentId: "sc-30z2li-3"
+  componentId: "sc-1891do4-3"
 })(["width:40px;height:40px;position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;color:", ";transition:0.4s ease-out all;cursor:", ";"], function (props) {
   return props.expanded ? '#0f0f0f' : '#9f9f9f';
 }, function (props) {
@@ -361,8 +368,8 @@ var SearchIcon = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.i.with
 });
 var SearchResults = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.div.withConfig({
   displayName: "Search__SearchResults",
-  componentId: "sc-30z2li-4"
-})(["width:100vw;height:100%;display:flex;flex-flow:column nowrap;overflow:scroll;margin-left:16px;padding:16px;box-sizing:border-box;"]);
+  componentId: "sc-1891do4-4"
+})(["width:100vw;height:100%;display:flex;flex-flow:column nowrap;overflow:scroll;margin-left:-16px;padding:16px;box-sizing:border-box;"]);
 var PosedDishCard = react_pose__WEBPACK_IMPORTED_MODULE_2___default.a.article({
   pressable: true,
   enter: {
@@ -382,7 +389,7 @@ var PosedDishCard = react_pose__WEBPACK_IMPORTED_MODULE_2___default.a.article({
 });
 var StyledPosedDishCard = styled_components__WEBPACK_IMPORTED_MODULE_1___default()(PosedDishCard).withConfig({
   displayName: "Search__StyledPosedDishCard",
-  componentId: "sc-30z2li-5"
+  componentId: "sc-1891do4-5"
 })(["margin-bottom:16px;scale:1;transform-origin:center !important;border-radius:4px;background:transparent;"]);
 
 var Search =
@@ -440,7 +447,10 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(StyledSearchWrapper, {
         pose: this.state.expanded ? 'expanded' : 'collapsed',
         expanded: this.state.expanded,
-        className: "sticky-events"
+        width: this.props.width,
+        style: {
+          width: this.props.width
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SearchInputWrapper, {
         expanded: this.state.expanded
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SearchIcon, {
@@ -765,27 +775,27 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var RestaurantWrapper = styled_components__WEBPACK_IMPORTED_MODULE_3___default.a.div.withConfig({
   displayName: "restaurant__RestaurantWrapper",
-  componentId: "jqq8w8-0"
+  componentId: "b9wkxk-0"
 })(["width:100%;height:100%;padding:0;margin:0;background:#f7f7f7;"]);
-var ActionButton = styled_components__WEBPACK_IMPORTED_MODULE_3___default.a.div.withConfig({
+var ActionButton = styled_components__WEBPACK_IMPORTED_MODULE_3___default.a.a.withConfig({
   displayName: "restaurant__ActionButton",
-  componentId: "jqq8w8-1"
-})(["position:fixed;top:16px;right:16px;height:40px;padding:0 24px;display:flex;align-items:center;justify-content:center;border-radius:4px;overflow:hidden;background:#FFFFFF;box-shadow:0 2px 16px -2px rgba(0,0,0,0.32);cursor:pointer;"]);
+  componentId: "b9wkxk-1"
+})(["position:fixed;top:16px;right:16px;height:40px;padding:0 24px;display:flex;align-items:center;justify-content:center;border-radius:4px;overflow:hidden;background:#FFFFFF;box-shadow:0 2px 16px -2px rgba(0,0,0,0.32);cursor:pointer;text-decoration:none;font-size:1rem;font-weight:400;color:#0f0f0f;z-index:8;"]);
 var Scroller = styled_components__WEBPACK_IMPORTED_MODULE_3___default.a.div.withConfig({
   displayName: "restaurant__Scroller",
-  componentId: "jqq8w8-2"
+  componentId: "b9wkxk-2"
 })(["width:100%;height:100%;min-height:100vh;margin-top:200px;background:transparent;& .sticky-events--sentinel{left:0;position:absolute;right:0;visibility:hidden;}& .sticky-events--sentinel-top{position:relative;}"]);
 var DishCards = styled_components__WEBPACK_IMPORTED_MODULE_3___default.a.div.withConfig({
   displayName: "restaurant__DishCards",
-  componentId: "jqq8w8-3"
+  componentId: "b9wkxk-3"
 })(["width:100%;height:100%;display:flex;flex-flow:column nowrap;padding:0 16px;box-sizing:border-box;"]);
 var DishCardsFilters = styled_components__WEBPACK_IMPORTED_MODULE_3___default.a.ul.withConfig({
   displayName: "restaurant__DishCardsFilters",
-  componentId: "jqq8w8-4"
+  componentId: "b9wkxk-4"
 })(["width:100%;max-width:100vw;overflow:scroll;padding:0 16px 0 16px;box-sizing:border-box;margin:0 0 16px 0;display:flex;flex-flow:row nowrap;position:relative;z-index:4;"]);
 var DishCardsFilter = styled_components__WEBPACK_IMPORTED_MODULE_3___default.a.li.withConfig({
   displayName: "restaurant__DishCardsFilter",
-  componentId: "jqq8w8-5"
+  componentId: "b9wkxk-5"
 })(["list-style:none;margin-right:8px;font-size:1.25rem;font-weight:400;color:", ";cursor:pointer;"], function (props) {
   return props.active ? '#0f0f0f' : '#9f9f9f';
 });
@@ -809,7 +819,7 @@ var PosedDishCard = react_pose__WEBPACK_IMPORTED_MODULE_4___default.a.article({
 });
 var StyledPosedDishCard = styled_components__WEBPACK_IMPORTED_MODULE_3___default()(PosedDishCard).withConfig({
   displayName: "restaurant__StyledPosedDishCard",
-  componentId: "jqq8w8-6"
+  componentId: "b9wkxk-6"
 })(["margin-bottom:16px;scale:1;transform-origin:center !important;border-radius:4px;background:transparent;"]);
 var SwiperContainer = react_pose__WEBPACK_IMPORTED_MODULE_4___default.a.div({
   enter: {
@@ -824,7 +834,7 @@ var SwiperContainer = react_pose__WEBPACK_IMPORTED_MODULE_4___default.a.div({
 });
 var StyledSwiperContainer = styled_components__WEBPACK_IMPORTED_MODULE_3___default()(SwiperContainer).withConfig({
   displayName: "restaurant__StyledSwiperContainer",
-  componentId: "jqq8w8-7"
+  componentId: "b9wkxk-7"
 })(["width:100vw;height:100vh;position:fixed;transform:translateX(100vw);top:0;z-index:8888;"]);
 
 var Restaurant =
@@ -844,7 +854,8 @@ function (_Component) {
       families: [],
       dishes: [],
       filteredDishes: [],
-      isSearching: false
+      isSearching: false,
+      isSticky: false
     };
     _this.actionButton = react__WEBPACK_IMPORTED_MODULE_1___default.a.createRef();
     return _this;
@@ -855,6 +866,30 @@ function (_Component) {
     value: function componentDidMount() {
       var actionButtonWidth = this.actionButton.current.offsetWidth;
       this.fetchDishes();
+
+      if (window) {
+        window.addEventListener('scroll', this.handleScroll.bind(this));
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      window.removeEventListener('scroll', this.handleScroll.bind(this));
+    }
+  }, {
+    key: "handleScroll",
+    value: function handleScroll() {
+      var scrollY = window.scrollY;
+
+      if (scrollY >= 160) {
+        this.setState({
+          isSticky: true
+        });
+      } else {
+        this.setState({
+          isSticky: false
+        });
+      }
     }
   }, {
     key: "fetchDishes",
@@ -904,7 +939,7 @@ function (_Component) {
     value: function render() {
       var _this3 = this;
 
-      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(RestaurantWrapper, null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(next_head__WEBPACK_IMPORTED_MODULE_2___default.a, null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("title", null, this.props.restaurant.title), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("link", {
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(RestaurantWrapper, null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(next_head__WEBPACK_IMPORTED_MODULE_2___default.a, null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("title", null, "What to eat at ", this.props.restaurant.title, " - ", this.props.restaurant.address.street, ", ", this.props.restaurant.address.city), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("link", {
         rel: "stylesheet",
         type: "text/css",
         charset: "UTF-8",
@@ -913,9 +948,18 @@ function (_Component) {
         rel: "stylesheet",
         type: "text/css",
         href: "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-      })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(ActionButton, {
-        innerRef: this.actionButton
-      }, "Call"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Profile__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      })), this.props.restaurant.action === "call" && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(ActionButton, {
+        innerRef: this.actionButton,
+        href: "tel: ".concat(this.props.restaurant.phone)
+      }, "Call"), this.props.restaurant.action === "reserve" && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(ActionButton, {
+        innerRef: this.actionButton,
+        target: "black",
+        href: this.props.restaurant.reserve
+      }, "Reserve"), this.props.restaurant.action === "order" && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(ActionButton, {
+        innerRef: this.actionButton,
+        target: "blank",
+        href: this.props.restaurant.order
+      }, "Order"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Profile__WEBPACK_IMPORTED_MODULE_8__["default"], {
         title: this.props.restaurant.title,
         cuisine: this.props.restaurant.cuisine,
         priceRange: this.props.restaurant.price,
@@ -923,6 +967,7 @@ function (_Component) {
         address: this.props.restaurant.address.street
       }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Scroller, null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Search__WEBPACK_IMPORTED_MODULE_9__["default"], {
         dishes: this.state.dishes,
+        width: this.state.isSticky ? "calc(100vw - 32px - ".concat(this.actionButton.current.offsetWidth, "px - 16px)") : 'calc(100vw - 32px)',
         handleExpandSearch: function handleExpandSearch() {
           return _this3.setState({
             isSearching: true
