@@ -5,29 +5,29 @@
     "dev": "node server.js",
     "prestart": "next build",
     "build": "next build",
-    "postinstall": "npm run build",
+    "postinstall": "yarn run build",
     "heroku-postbuild": "next build",
     "start": "node server.js -p ${PORT}"
   },
   "dependencies": {
     "babel-plugin-styled-components": "^1.8.0",
-    "express": "^4.16.3",
-    "firebase": "^5.5.2",
-    "fuse.js": "^3.2.1",
+    "express": "^4.16.4",
+    "firebase": "^5.5.6",
+    "fuse.js": "^3.3.0",
     "lodash": "^4.17.11",
-    "next": "^7.0.1",
+    "next": "^7.0.2",
     "path": "^0.12.7",
-    "popmotion-pose": "^3.3.1",
+    "popmotion-pose": "^3.3.2",
     "re-base": "^4.0.0",
     "react": "16.5.1",
     "react-dom": "16.5.1",
-    "react-pose": "^3.3.6",
-    "react-slick": "^0.23.1",
+    "react-pose": "^3.3.7",
+    "react-slick": "^0.23.2",
     "sticky-events": "^2.2.0",
     "styled-components": "^2.1.0"
   },
   "engines": {
-    "node": "10.5.x"
+    "node": "11.0.x"
   },
   "license": "ISC"
 }
