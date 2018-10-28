@@ -269,7 +269,7 @@ class Restaurant extends Component {
           title={this.props.restaurant.title}
           cuisine={this.props.restaurant.cuisine}
           priceRange={this.props.restaurant.price}
-          background="http://irishpubcompany.com/wp-content/uploads/2018/01/Four-650x400.jpg"
+          background={this.props.restaurant.image}
           address={this.props.restaurant.address.street} />
         <Scroller>
             <Search
