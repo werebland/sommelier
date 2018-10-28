@@ -6,12 +6,11 @@ import 'firebase/firestore';
 
 if (!firebase.apps.length) {
   var app = firebase.initializeApp({
-    apiKey: "AIzaSyCnFAFeVej1tIO9muB4M1ayuiUMo2GF3G8",
+      apiKey: process.env.FIREBASE_API,
       authDomain: "dishful-3d728.firebaseapp.com",
       databaseURL: "https://dishful-3d728.firebaseio.com",
       projectId: "dishful-3d728",
       storageBucket: "dishful-3d728.appspot.com",
-      messagingSenderId: "452243524763"
   });
   app.settings = { timestampsInSnapshots: true }
 } else {
