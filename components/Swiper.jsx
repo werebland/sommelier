@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Slider from "react-slick";
+import posed, { PoseGroup } from 'react-pose';
 import _ from 'lodash'
+import Sharer from './Sharer'
 
 const SwiperWrapper = styled.div`
   width: 100vw;
@@ -11,6 +13,8 @@ const SwiperWrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
   color: #fff;
+  padding-top: 40px;
+  box-sizing: border-box;
 `;
 
 const SwiperCollapse = styled.i`
@@ -19,7 +23,20 @@ const SwiperCollapse = styled.i`
   color: #fff;
   cursor: pointer;
   display: block;
-  margin: 16px 0 0 16px;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+`;
+
+const SwiperShare = styled.i`
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  top: 16px;
+  right: 16px;
 `;
 
 const SwiperHeader = styled.div`
@@ -105,17 +122,58 @@ const DishSlideDescription = styled.p`
   box-sizing: border-box;
 `;
 
+const SharerContainer = posed.div({
+  enter: {
+    y: '0vh',
+  },
+  exit: {
+    y: '100vh',
+  },
+  init: {
+    y: '100vh',
+  }
+})
+
+const StyledSharerContainer = styled(SharerContainer)`
+  width: 100vw;
+  height: 240px;
+  position: fixed;
+  transform: translateY(100vw);
+  bottom: 0;
+  z-index: 8888;
+`;
+
 class Swiper extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      slideIndex: this.props.dishIndex
+      slideIndex: this.props.dishIndex,
+      isSharing: false,
+      activeDish: {}
     }
   }
 
   componentWillUnmount() {
     document.body.style.overflowY = 'auto'
+  }
+
+  handleShare() {
+    const slideIndex = this.state.slideIndex
+    console.log(this.state.slideIndex);
+    console.log(slideIndex);
+    const dish = this.props.dishes[slideIndex]
+    console.log(dish);
+    this.setState({
+      isSharing: true,
+      activeDish: dish
+    })
+  }
+
+  hasShared(medium) {
+    this.setState({
+      isSharing: false,
+    })
   }
 
   render() {
@@ -141,6 +199,9 @@ class Swiper extends Component {
         <SwiperCollapse className="material-icons" onClick={() => this.props.handleCollapse()}>
           close
         </SwiperCollapse>
+        <SwiperShare className="material-icons" onClick={() => this.handleShare()}>
+          open_in_new
+        </SwiperShare>
         <SwiperHeader>
           <SwiperTitle>
             {this.props.title === "popular" &&
@@ -182,6 +243,16 @@ class Swiper extends Component {
             )}
           </Slider>
         </SwiperSlick>
+        <PoseGroup>
+          {this.state.isSharing &&
+            <StyledSharerContainer key="0">
+              <Sharer
+                onShare={(medium) => this.hasShared(medium)}
+                dish={this.state.activeDish}
+                restaurant={this.props.restaurant}/>
+            </StyledSharerContainer>
+          }
+        </PoseGroup>
       </SwiperWrapper>
     );
   }

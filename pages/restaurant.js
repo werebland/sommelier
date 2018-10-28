@@ -158,7 +158,6 @@ class Restaurant extends Component {
 
   static async getInitialProps({ query }) {
     const { username } = query
-    console.log(username);
     let restaurants = await base.get('restaurants', {
       context: this,
       query: (ref) => ref.where('username', '==', username),
@@ -170,7 +169,7 @@ class Restaurant extends Component {
     })
     let restaurant = {
       address: {
-        
+
       }
     }
     if (restaurants) {
@@ -204,7 +203,6 @@ class Restaurant extends Component {
 
   fetchDishes() {
     let restaurantId = this.props.restaurant.id
-    console.log(restaurantId);
     base.get('dishes', {
       context: this,
       withIds: true,
@@ -237,6 +235,14 @@ class Restaurant extends Component {
 
   render() {
 
+    if (typeof window !== 'undefined' && this.state.isSearching) {
+      window.document.body.style.overflowY = 'hidden'
+    } else if (typeof window !== 'undefined' && !this.state.isSearching) {
+      window.document.body.style.overflowY = 'auto'
+    } else {
+
+    }
+
     return (
       <RestaurantWrapper>
         <Head>
@@ -266,12 +272,12 @@ class Restaurant extends Component {
           background="http://irishpubcompany.com/wp-content/uploads/2018/01/Four-650x400.jpg"
           address={this.props.restaurant.address.street} />
         <Scroller>
-          <Search
-            dishes={this.state.dishes}
-            width={this.state.isSticky ? `calc(100vw - 32px - ${this.actionButton.current.offsetWidth}px - 16px)` : 'calc(100vw - 32px)'}
-            handleExpandSearch={() => this.setState({ isSearching: true })}
-            handleCollapseSearch={() => this.setState({ isSearching: false })}
-            handleDishCardClick={(id, result) => this.setState({ activeDish: id, results: result })}/>
+            <Search
+              dishes={this.state.dishes}
+              width={this.state.isSticky ? `calc(100vw - 32px - ${this.actionButton.current.offsetWidth}px - 16px)` : 'calc(100vw - 32px)'}
+              handleExpandSearch={() => this.setState({ isSearching: true })}
+              handleCollapseSearch={() => this.setState({ isSearching: false })}
+              handleDishCardClick={(id, result) => this.setState({ activeDish: id, results: result })}/>
           <DishCardsFilters>
             <DishCardsFilter active={this.state.activeFilter === 'popular'} onClick={() => this.setState({ activeFilter: 'popular', filteredDishes: this.state.dishes })}>
               Popular
@@ -299,6 +305,7 @@ class Restaurant extends Component {
             <StyledSwiperContainer key="0">
               <Swiper
                 dish={this.state.activeDish}
+                restaurant={this.props.restaurant}
                 dishes={this.state.isSearching ? this.state.results : this.state.filteredDishes}
                 dishIndex={this.state.isSearching ?  _.findIndex(this.state.results, { id: this.state.activeDish }) :  _.findIndex(this.state.filteredDishes, { id: this.state.activeDish })}
                 title={this.state.isSearching ? 'results' : this.state.activeFilter}

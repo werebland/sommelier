@@ -51,6 +51,13 @@ const ProfileSubtitle = styled.span`
   font-size: 1rem;
   font-weight: 500;
   color: #fff;
+
+  & a {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+  }
 `;
 
 const Profile = ({title, cuisine, priceRange, background, address}) => (
@@ -60,7 +67,7 @@ const Profile = ({title, cuisine, priceRange, background, address}) => (
         {title}
       </ProfileTitle>
       <ProfileSubtitle>
-        {cuisine} · {priceRange} · {address}
+        {cuisine} · {priceRange} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${address}`} target="blank">{address}</a>
       </ProfileSubtitle>
     </ProfileContent>
 

@@ -31,7 +31,7 @@ const StyledSearchWrapper = styled(SearchWrapper)`
   top: 36px;
   overflow: hidden;
   box-sizing: border-box;
-  padding: ${props => props.expanded ? '16px' : 0};
+  padding: ${props => props.expanded ? '16px 16px 0 16px' : 0};
   z-index: 8;
 `;
 
@@ -95,7 +95,7 @@ const SearchResults = styled.div`
   flex-flow: column nowrap;
   overflow: scroll;
   margin-left: -16px;
-  padding: 16px;
+  padding: 16px 16px 54px 16px;
   box-sizing: border-box;
 `;
 
@@ -182,6 +182,7 @@ class Search extends Component {
             type="search"
             onFocus={() => this.state.expanded === false && this.handleExpand()}
             onChange={(e) => this.setState({ term: e.target.value })}
+            value={this.state.term}
             placeholder="Search Dishes"/>
         </SearchInputWrapper>
         {this.state.expanded && this.state.term !== "" &&
