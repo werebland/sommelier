@@ -141,6 +141,26 @@ const StyledSwiperContainer = styled(SwiperContainer)`
   z-index: 8888;
 `;
 
+const ErrorWrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  
+`;
+
+const ErrorContent = styled.div`
+  padding: 16px;
+  background: #f7f7f7;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0f0f0f;
+`;
+
 class Restaurant extends Component {
 
   constructor(props) {
@@ -169,9 +189,7 @@ class Restaurant extends Component {
       console.log(err);
     })
     let restaurant = {
-      address: {
 
-      }
     }
     if (restaurants) {
       restaurant = restaurants[0] || {}
@@ -180,29 +198,32 @@ class Restaurant extends Component {
   }
 
   componentDidMount() {
-    const actionButtonWidth = this.actionButton.current.offsetWidth
-    this.fetchDishes()
-    if (window) {
-      window.addEventListener('scroll', this.handleScroll.bind(this));
+    if (Object.keys(this.props.restaurant).length > 0) {
+      console.log(this.props.restaurant);
+      const actionButtonWidth = this.actionButton.current.offsetWidth
+      this.fetchDishes()
+      if (window) {
+        window.addEventListener('scroll', this.handleScroll.bind(this));
+      }
+      let date = moment().format('YYYYMMDD')
+      let views = this.props.restaurant.views
+      if (_.has(views, date)) {
+        // Has views, increment view by 1
+        _.set(views, date, views[date] + 1)
+      } else {
+        // Doesn't have views for this date, add a view
+        _.set(views, date, 1)
+      }
+      const data = {
+        views
+      }
+      console.log(data);
+      base.updateDoc('restaurants/' + this.props.restaurant.id, data)
+        .then(() => {
+        }).catch(err => {
+        console.log(err);
+      });
     }
-    let date = moment().format('YYYYMMDD')
-    let views = this.props.restaurant.views
-    if (_.has(views, date)) {
-      // Has views, increment view by 1
-      _.set(views, date, views[date] + 1)
-    } else {
-      // Doesn't have views for this date, add a view
-      _.set(views, date, 1)
-    }
-    const data = {
-      views
-    }
-    console.log(data);
-    base.updateDoc('restaurants/' + this.props.restaurant.id, data)
-      .then(() => {
-      }).catch(err => {
-      console.log(err);
-    });
   }
 
   componentWillUnmount(){
@@ -288,6 +309,16 @@ class Restaurant extends Component {
       window.document.body.style.overflowY = 'auto'
     } else {
 
+    }
+
+    if (Object.keys(this.props.restaurant).length === 0) {
+      return (
+        <ErrorWrapper>
+          <ErrorContent>
+          Whoops! There doesn't seem to be a restaurant with that username. This is likely a problem with the implementation of Sommelier on your site. Get in touch with us at <a href="mailto:support@getsommelier.com">support@getsommelier.com</a>.
+          </ErrorContent>
+        </ErrorWrapper>
+      )
     }
 
     return (
