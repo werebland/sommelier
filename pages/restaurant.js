@@ -5,6 +5,7 @@ import posed, { PoseGroup } from 'react-pose';
 import _ from 'lodash'
 import base from '../config'
 import firestore from 'firebase/firestore'
+import moment from 'moment'
 import Profile from '../components/Profile'
 import Search from '../components/Search'
 import DishCard from '../components/DishCard'
@@ -184,6 +185,24 @@ class Restaurant extends Component {
     if (window) {
       window.addEventListener('scroll', this.handleScroll.bind(this));
     }
+    let date = moment().format('YYYYMMDD')
+    let views = this.props.restaurant.views
+    if (_.has(views, date)) {
+      // Has views, increment view by 1
+      _.set(views, date, views[date] + 1)
+    } else {
+      // Doesn't have views for this date, add a view
+      _.set(views, date, 1)
+    }
+    const data = {
+      views
+    }
+    console.log(data);
+    base.updateDoc('restaurants/' + this.props.restaurant.id, data)
+      .then(() => {
+      }).catch(err => {
+      console.log(err);
+    });
   }
 
   componentWillUnmount(){
@@ -233,6 +252,34 @@ class Restaurant extends Component {
     }
   }
 
+  handleDishView(id, result) {
+    if (result) {
+      this.setState({ activeDish: id, results: result })
+    } else {
+      this.setState({
+        activeDish: id
+      })
+    }
+    let dish = _.find(this.state.dishes, { id: id })
+    let date = moment().format('YYYYMMDD')
+    let views = dish.views
+    if (_.has(views, date)) {
+      // Has views, increment view by 1
+      _.set(views, date, views[date] + 1)
+    } else {
+      // Doesn't have views for this date, add a view
+      _.set(views, date, 1)
+    }
+    const data = {
+      views
+    }
+    base.updateDoc('dishes/' + id, data)
+      .then(() => {
+      }).catch(err => {
+      //handle error
+    });
+  }
+
   render() {
 
     if (typeof window !== 'undefined' && this.state.isSearching) {
@@ -277,7 +324,7 @@ class Restaurant extends Component {
               width={this.state.isSticky ? `calc(100vw - 32px - ${this.actionButton.current.offsetWidth}px - 16px)` : 'calc(100vw - 32px)'}
               handleExpandSearch={() => this.setState({ isSearching: true })}
               handleCollapseSearch={() => this.setState({ isSearching: false })}
-              handleDishCardClick={(id, result) => this.setState({ activeDish: id, results: result })}/>
+              handleDishCardClick={(id, result) => this.handleDishView(id, result)}/>
           <DishCardsFilters>
             <DishCardsFilter active={this.state.activeFilter === 'popular'} onClick={() => this.setState({ activeFilter: 'popular', filteredDishes: this.state.dishes })}>
               Popular
@@ -294,7 +341,11 @@ class Restaurant extends Component {
           <DishCards>
             <PoseGroup>
               {this.state.filteredDishes.map((dish) =>
-                <StyledPosedDishCard key={dish.id} onClick={() => this.setState({ activeDish: dish.id })}><DishCard dish={dish}/></StyledPosedDishCard>)
+                <StyledPosedDishCard
+                  key={dish.id}
+                  onClick={() => this.handleDishView(dish.id)}><DishCard
+                  dish={dish}/>
+                </StyledPosedDishCard>)
               }
             </PoseGroup>
           </DishCards>

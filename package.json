@@ -15,6 +15,7 @@
     "firebase": "^5.5.6",
     "fuse.js": "^3.3.0",
     "lodash": "^4.17.11",
+    "moment": "^2.22.2",
     "next": "^7.0.2",
     "path": "^0.12.7",
     "popmotion-pose": "^3.3.2",
