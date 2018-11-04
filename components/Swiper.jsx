@@ -228,11 +228,11 @@ class Swiper extends Component {
                 <DishSlideImage image={dish.image}/>
                 <DishSlideContent>
                   <DishSlideTitle>
-                    {dish.title}
+                    {dish.name}
                     <span>${dish.price}</span>
                   </DishSlideTitle>
                   <DishSlideSubtitle>
-                    {_.upperFirst(dish.family)} · {_.upperFirst(dish.type)}
+                    {dish.section} · {dish.type}
                   </DishSlideSubtitle>
                   <DishSlideDescription>
                     {dish.description}

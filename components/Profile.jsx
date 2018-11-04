@@ -60,11 +60,11 @@ const ProfileSubtitle = styled.span`
   }
 `;
 
-const Profile = ({title, cuisine, priceRange, background, address}) => (
+const Profile = ({name, cuisine, priceRange, background, address}) => (
   <ProfileWrapper background={background}>
     <ProfileContent>
       <ProfileTitle>
-        {title}
+        {name}
       </ProfileTitle>
       <ProfileSubtitle>
         {cuisine} · {priceRange} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${address}`} target="blank">{address}</a>

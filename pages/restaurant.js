@@ -10,6 +10,7 @@ import Profile from '../components/Profile'
 import Search from '../components/Search'
 import DishCard from '../components/DishCard'
 import Swiper from '../components/Swiper'
+import Filter from '../components/Filter'
 
 const RestaurantWrapper = styled.div`
   width: 100%;
@@ -37,7 +38,7 @@ const ActionButton = styled.a`
   font-size: 1rem;
   font-weight: 400;
   color: #0f0f0f;
-  z-index: 8;
+  z-index: 7;
 `;
 
 const Scroller = styled.div`
@@ -88,6 +89,7 @@ const DishCardsFilter = styled.li`
   font-weight: 400;
   color: ${props => props.active ? '#0f0f0f' : '#9f9f9f'};
   cursor: pointer;
+  white-space: pre;
 `;
 
 const DishCardContainer = posed.div({
@@ -149,7 +151,6 @@ const ErrorWrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding: 24px;
-  
 `;
 
 const ErrorContent = styled.div`
@@ -168,7 +169,7 @@ class Restaurant extends Component {
     this.state = {
       activeDish: "",
       activeFilter: 'popular',
-      families: [],
+      sections: [],
       dishes: [],
       filteredDishes: [],
       isSearching: false,
@@ -200,29 +201,28 @@ class Restaurant extends Component {
   componentDidMount() {
     if (Object.keys(this.props.restaurant).length > 0) {
       console.log(this.props.restaurant);
-      const actionButtonWidth = this.actionButton.current.offsetWidth
       this.fetchDishes()
       if (window) {
         window.addEventListener('scroll', this.handleScroll.bind(this));
       }
       let date = moment().format('YYYYMMDD')
-      let views = this.props.restaurant.views
-      if (_.has(views, date)) {
-        // Has views, increment view by 1
-        _.set(views, date, views[date] + 1)
-      } else {
-        // Doesn't have views for this date, add a view
-        _.set(views, date, 1)
-      }
-      const data = {
-        views
-      }
-      console.log(data);
-      base.updateDoc('restaurants/' + this.props.restaurant.id, data)
-        .then(() => {
-        }).catch(err => {
-        console.log(err);
-      });
+      // let views = this.props.restaurant.views
+      // if (_.has(views, date)) {
+      //   // Has views, increment view by 1
+      //   _.set(views, date, views[date] + 1)
+      // } else {
+      //   // Doesn't have views for this date, add a view
+      //   _.set(views, date, 1)
+      // }
+      // const data = {
+      //   views
+      // }
+      // console.log(data);
+      // base.updateDoc('restaurants/' + this.props.restaurant.id, data)
+      //   .then(() => {
+      //   }).catch(err => {
+      //   console.log(err);
+      // });
     }
   }
 
@@ -243,12 +243,14 @@ class Restaurant extends Component {
 
   fetchDishes() {
     let restaurantId = this.props.restaurant.id
-    base.get('dishes', {
+    console.log(restaurantId);
+    base.get('items', {
       context: this,
       withIds: true,
       withRefs: true,
       query: (ref) => ref.where('restaurantId', '==', restaurantId),
     }).then(data => {
+      console.log(data);
       this.processDishes(data)
     }).catch(err => {
       console.log(err);
@@ -256,16 +258,16 @@ class Restaurant extends Component {
   }
 
   processDishes(dishes) {
-    let families = []
+    let sections = []
     _.each(dishes, function(dish) {
-      let family = dish.family
-      families.push(family)
+      let section = dish.section
+      sections.push(section)
     })
-    if (families.length === dishes.length) {
-      const uniqueFamiles = _.uniq(families)
-      const groupedDishes = _.groupBy(dishes, 'family')
+    if (sections.length === dishes.length) {
+      const uniqueSections = _.uniq(sections)
+      const groupedDishes = _.groupBy(dishes, 'section')
       this.setState({
-        families: uniqueFamiles,
+        sections: uniqueSections,
         groupedDishes: groupedDishes,
         dishes: dishes,
         filteredDishes: dishes,
@@ -328,6 +330,7 @@ class Restaurant extends Component {
           <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
           <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
         </Head>
+        <Filter />
         {this.props.restaurant.action === "call" &&
           <ActionButton innerRef={this.actionButton} href={`tel: ${this.props.restaurant.phone}`}>
             Call
@@ -344,7 +347,7 @@ class Restaurant extends Component {
           </ActionButton>
         }
         <Profile
-          title={this.props.restaurant.title}
+          name={this.props.restaurant.name}
           cuisine={this.props.restaurant.cuisine}
           priceRange={this.props.restaurant.price}
           background={this.props.restaurant.image}
@@ -352,20 +355,21 @@ class Restaurant extends Component {
         <Scroller>
             <Search
               dishes={this.state.dishes}
-              width={this.state.isSticky ? `calc(100vw - 32px - ${this.actionButton.current.offsetWidth}px - 16px)` : 'calc(100vw - 32px)'}
+              sticky={this.state.isSticky}
+              width={this.state.isSticky ? `calc(100vw - 32px - ${this.actionButton.current.offsetWidth}px - 16px - 56px)` : 'calc(100vw - 32px)'}
               handleExpandSearch={() => this.setState({ isSearching: true })}
               handleCollapseSearch={() => this.setState({ isSearching: false })}
               handleDishCardClick={(id, result) => this.handleDishView(id, result)}/>
           <DishCardsFilters>
             <DishCardsFilter active={this.state.activeFilter === 'popular'} onClick={() => this.setState({ activeFilter: 'popular', filteredDishes: this.state.dishes })}>
-              Popular
+              All
             </DishCardsFilter>
-            {this.state.families.map((family) =>
+            {this.state.sections.map((section) =>
               <DishCardsFilter
-                key={family}
-                active={this.state.activeFilter === _.lowerCase(family)}
-                onClick={() => this.setState({ activeFilter: _.lowerCase(family), filteredDishes: this.state.groupedDishes[family] })}>
-                  {_.upperFirst(family)}s
+                key={section}
+                active={this.state.activeFilter === _.lowerCase(section)}
+                onClick={() => this.setState({ activeFilter: _.lowerCase(section), filteredDishes: this.state.groupedDishes[section] })}>
+                  {_.upperFirst(section)}
                 </DishCardsFilter>)
             }
           </DishCardsFilters>

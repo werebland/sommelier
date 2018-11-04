@@ -78,13 +78,13 @@ class DishCard extends Component {
         <DishCardImage image={this.props.dish.image}/>
         <DishCardContent>
           <DishCardTitle>
-            {this.props.dish.title}
+            {this.props.dish.name}
             <span>
               ${this.props.dish.price}
             </span>
           </DishCardTitle>
           <DishCardSubtitle>
-            {_.upperFirst(this.props.dish.family)} · {_.upperFirst(this.props.dish.type)}
+            {_.upperFirst(this.props.dish.section)} · {_.upperFirst(this.props.dish.type)}
           </DishCardSubtitle>
         </DishCardContent>
       </StyledDishCardWrapper>

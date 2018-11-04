@@ -6,17 +6,17 @@ import DishCard from './DishCard'
 
 const SearchWrapper = posed.div({
   expanded: {
-    width: '100vw',
+    width: ({ width }) => width,
     height: '100vh',
     y: -36,
-    x: -16,
+    x: ({ leftOffset }) => leftOffset,
   },
   collapsed: {
     width: ({ width }) => width,
     height: '40px',
     y: -20,
     x: 0,
-  }
+  },
 })
 
 const StyledSearchWrapper = styled(SearchWrapper)`
@@ -29,6 +29,7 @@ const StyledSearchWrapper = styled(SearchWrapper)`
   position: ${props => props.expanded ? 'fixed' : 'sticky'};
   transform: translateY(-20px);
   top: 36px;
+  left: ${props => props.left};
   overflow: hidden;
   box-sizing: border-box;
   padding: ${props => props.expanded ? '16px 16px 0 16px' : 0};
@@ -172,7 +173,9 @@ class Search extends Component {
       <StyledSearchWrapper
         pose={this.state.expanded ? 'expanded' : 'collapsed'}
         expanded={this.state.expanded}
-        width={this.props.width}
+        width={this.state.expanded ? '100vw' : this.props.width }
+        left={this.props.sticky ? '72px' : '0'}
+        leftOffset={this.props.sticky ? '-88px' : '-16px'}
         style={{width: this.props.width}}>
         <SearchInputWrapper expanded={this.state.expanded}>
           <SearchIcon className="material-icons" onClick={() => this.state.expanded === true && this.handleCollapse()} expanded={this.state.expanded}>
@@ -183,7 +186,7 @@ class Search extends Component {
             onFocus={() => this.state.expanded === false && this.handleExpand()}
             onChange={(e) => this.setState({ term: e.target.value })}
             value={this.state.term}
-            placeholder="Search Dishes"/>
+            placeholder={this.props.sticky ? 'Search' : 'Search Dishes'}/>
         </SearchInputWrapper>
         {this.state.expanded && this.state.term !== "" &&
           <SearchResults>

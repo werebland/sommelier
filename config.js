@@ -2,15 +2,13 @@ import Rebase from 're-base';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-
-
 if (!firebase.apps.length) {
   var app = firebase.initializeApp({
       apiKey: process.env.FIREBASE_API,
-      authDomain: "dishful-3d728.firebaseapp.com",
-      databaseURL: "https://dishful-3d728.firebaseio.com",
-      projectId: "dishful-3d728",
-      storageBucket: "dishful-3d728.appspot.com",
+      authDomain: "bland-sommelier.firebaseapp.com",
+      databaseURL: "https://bland-sommelier.firebaseio.com",
+      projectId: "bland-sommelier",
+      storageBucket: "bland-sommelier.appspot.com",
   });
   app.settings = { timestampsInSnapshots: true }
 } else {
