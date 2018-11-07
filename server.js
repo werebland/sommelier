@@ -53,8 +53,8 @@ if (!dev && cluster.isMaster) {
         return app.render(req, res, '/restaurant', { username: req.params.username })
       })
 
-      server.get('/:username/:section', (req, res) => {
-        return app.render(req, res, '/section', { username: req.params.username, section: req.params.section })
+      server.get('/:username/:itemId', (req, res) => {
+        return app.render(req, res, '/item', { username: req.params.username, itemId: req.params.itemId })
       })
 
       // Default catch-all renders Next app

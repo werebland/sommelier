@@ -168,12 +168,13 @@ class Restaurant extends Component {
     super(props);
     this.state = {
       activeDish: "",
-      activeFilter: 'popular',
+      activeSection: '',
       sections: [],
       dishes: [],
       filteredDishes: [],
       isSearching: false,
       isSticky: false,
+      sectionDishes: [],
     };
     this.actionButton = React.createRef()
   }
@@ -243,14 +244,12 @@ class Restaurant extends Component {
 
   fetchDishes() {
     let restaurantId = this.props.restaurant.id
-    console.log(restaurantId);
     base.get('items', {
       context: this,
       withIds: true,
       withRefs: true,
       query: (ref) => ref.where('restaurantId', '==', restaurantId),
     }).then(data => {
-      console.log(data);
       this.processDishes(data)
     }).catch(err => {
       console.log(err);
@@ -270,7 +269,7 @@ class Restaurant extends Component {
         sections: uniqueSections,
         groupedDishes: groupedDishes,
         dishes: dishes,
-        filteredDishes: dishes,
+        sectionDishes: dishes,
       })
     }
   }
@@ -303,6 +302,52 @@ class Restaurant extends Component {
     });
   }
 
+  handleSort(selectedSort) {
+    const dishes = this.state.dishes
+    const section = this.state.activeSection
+    console.log(section);
+    let sortedDishes = []
+    console.log(selectedSort);
+    switch (selectedSort) {
+      case "priceAsc":
+        sortedDishes = _.sortBy(dishes, ['price'])
+        console.log(sortedDishes);
+        break;
+      case "priceDsc":
+        sortedDishes = _.sortBy(dishes, ['price'])
+        sortedDishes = _.reverse(sortedDishes)
+        console.log(sortedDishes);
+        break;
+      case "nameAsc":
+        sortedDishes = _.sortBy(dishes, ['name'])
+        console.log(sortedDishes);
+        break;
+      case "nameDsc":
+        sortedDishes = _.sortBy(dishes, ['name'])
+        sortedDishes = _.reverse(sortedDishes)
+        console.log(sortedDishes);
+        break;
+      default:
+    }
+    if (sortedDishes.length > 0 && section !== '') {
+      const groupedDishes = _.groupBy(sortedDishes, 'section')
+      console.log(groupedDishes);
+      this.setState({
+        groupedDishes,
+        sectionDishes: groupedDishes[section],
+      })
+    } else if (sortedDishes.length > 0 && section == '') {
+      const groupedDishes = _.groupBy(sortedDishes, 'section')
+      console.log('section is null');
+      console.log(groupedDishes);
+      this.setState({
+        dishes: sortedDishes,
+        groupedDishes,
+        sectionDishes: sortedDishes,
+      })
+    }
+  }
+
   render() {
 
     if (typeof window !== 'undefined' && this.state.isSearching) {
@@ -326,11 +371,11 @@ class Restaurant extends Component {
     return (
       <RestaurantWrapper>
         <Head>
-          <title>What to eat at {this.props.restaurant.title} - {this.props.restaurant.address.street}, {this.props.restaurant.address.city}</title>
+          <title>What to eat at {this.props.restaurant.name} - {this.props.restaurant.address.street}, {this.props.restaurant.address.city}</title>
           <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
           <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
         </Head>
-        <Filter />
+        <Filter onSort={(selectedSort) => this.handleSort(selectedSort)}/>
         {this.props.restaurant.action === "call" &&
           <ActionButton innerRef={this.actionButton} href={`tel: ${this.props.restaurant.phone}`}>
             Call
@@ -361,21 +406,21 @@ class Restaurant extends Component {
               handleCollapseSearch={() => this.setState({ isSearching: false })}
               handleDishCardClick={(id, result) => this.handleDishView(id, result)}/>
           <DishCardsFilters>
-            <DishCardsFilter active={this.state.activeFilter === 'popular'} onClick={() => this.setState({ activeFilter: 'popular', filteredDishes: this.state.dishes })}>
+            <DishCardsFilter active={this.state.activeSection === ''} onClick={() => this.setState({ activeSection: '', sectionDishes: this.state.dishes })}>
               All
             </DishCardsFilter>
             {this.state.sections.map((section) =>
               <DishCardsFilter
                 key={section}
-                active={this.state.activeFilter === _.lowerCase(section)}
-                onClick={() => this.setState({ activeFilter: _.lowerCase(section), filteredDishes: this.state.groupedDishes[section] })}>
+                active={this.state.activeSection === section}
+                onClick={() => this.setState({ activeSection: section, sectionDishes: this.state.groupedDishes[section] })}>
                   {_.upperFirst(section)}
                 </DishCardsFilter>)
             }
           </DishCardsFilters>
           <DishCards>
             <PoseGroup>
-              {this.state.filteredDishes.map((dish) =>
+              {this.state.sectionDishes.map((dish) =>
                 <StyledPosedDishCard
                   key={dish.id}
                   onClick={() => this.handleDishView(dish.id)}><DishCard
@@ -392,9 +437,9 @@ class Restaurant extends Component {
               <Swiper
                 dish={this.state.activeDish}
                 restaurant={this.props.restaurant}
-                dishes={this.state.isSearching ? this.state.results : this.state.filteredDishes}
-                dishIndex={this.state.isSearching ?  _.findIndex(this.state.results, { id: this.state.activeDish }) :  _.findIndex(this.state.filteredDishes, { id: this.state.activeDish })}
-                title={this.state.isSearching ? 'results' : this.state.activeFilter}
+                dishes={this.state.isSearching ? this.state.results : this.state.sectionDishes}
+                dishIndex={this.state.isSearching ?  _.findIndex(this.state.results, { id: this.state.activeDish }) :  _.findIndex(this.state.sectionDishes, { id: this.state.activeDish })}
+                title={this.state.isSearching ? 'results' : this.state.activeSection}
                 isVisible={this.state.activeDish !== ""}
                 handleCollapse={() => this.setState({ activeDish: "" })}/>
             </StyledSwiperContainer>

@@ -74,7 +74,7 @@ class DishCard extends Component {
 
   render() {
     return (
-      <StyledDishCardWrapper onPressEnd={() => this.props.handleDishCardClick('af3efdssdfgergvds')}>
+      <StyledDishCardWrapper onPressEnd={() => this.props.handleDishCardClick(this.props.dish.id)}>
         <DishCardImage image={this.props.dish.image}/>
         <DishCardContent>
           <DishCardTitle>

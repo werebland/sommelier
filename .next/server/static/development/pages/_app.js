@@ -102,7 +102,7 @@ module.exports =
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MyApp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Sommelier; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "@babel/runtime/regenerator");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
@@ -136,18 +136,18 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var MyApp =
+var Sommelier =
 /*#__PURE__*/
 function (_App) {
-  _inherits(MyApp, _App);
+  _inherits(Sommelier, _App);
 
-  function MyApp() {
-    _classCallCheck(this, MyApp);
+  function Sommelier() {
+    _classCallCheck(this, Sommelier);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MyApp).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Sommelier).apply(this, arguments));
   }
 
-  _createClass(MyApp, [{
+  _createClass(Sommelier, [{
     key: "render",
     value: function render() {
       var _this$props = this.props,
@@ -199,7 +199,7 @@ function (_App) {
     }()
   }]);
 
-  return MyApp;
+  return Sommelier;
 }(next_app__WEBPACK_IMPORTED_MODULE_2___default.a);
 
 

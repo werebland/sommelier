@@ -204,15 +204,7 @@ class Swiper extends Component {
         </SwiperShare>
         <SwiperHeader>
           <SwiperTitle>
-            {this.props.title === "popular" &&
-              "Popular"
-            }
-            {this.props.title === "results" &&
-              "Results"
-            }
-            {this.props.title !== "popular" && this.props.title !== "results" &&
-              _.upperFirst(this.props.title) + "s"
-            }
+            {this.props.title === "" ? 'All' : this.props.title}
           </SwiperTitle>
           <SwiperStatus>
             <i className="material-icons" onClick={() => this.slider.slickGoTo(this.state.slideIndex - 1)}>chevron_left</i>
