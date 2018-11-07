@@ -68,7 +68,7 @@ class Item extends Component {
   static async getInitialProps({ query }) {
     const { username, itemId } = query
     console.log('items/2tyhLli5kEi2RZjAJNou');
-    let item = await base.get('items/2tyhLli5kEi2RZjAJNou', {
+    let item = await base.get('items/' + itemId, {
       context: this,
       withIds: true,
     }).then(data => {
@@ -89,6 +89,8 @@ class Item extends Component {
           <meta property="og:title" content={this.props.item.name} />
           <meta property="og:description" content={this.props.item.description} />
           <meta property="og:image" content={this.props.item.image} />
+          <meta property="og:image:width" content="600" />
+          <meta property="og:image:height" content="315" />
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
         <ItemWrapper>
