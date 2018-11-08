@@ -70,6 +70,18 @@ const StyledFilterToggleIcon = styled(FilterToggleIcon)`
   scale: 1;
   opacity: 1;
   color: #0f0f0f;
+  position: relative;
+`;
+
+const FilterIndicator = styled.div`
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #f94343;
+  display: block;
+  position: absolute;
+  right: -4px;
+  top: -4px;
 `;
 
 const FilterOptions = styled.div`
@@ -96,13 +108,12 @@ const FilterOptionToggle = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #0f0f0f;
-  background: #fff;
-  border: 1px solid #0f0f0f;
+  color: #fff;
+  background:${props => props.active ? '#0f0f0f' : '#9f9f9f'};
   margin-right: 8px;
 
   &:hover, &:active, &:focus {
-    background: #f7f7f7;
+    background: #0f0f0f;
   }
 `;
 
@@ -146,8 +157,8 @@ const FilterOptionDropdownOption = styled.li`
   list-style: none;
   cursor: pointer;
   border-radius: 4px;
-  background: ${props => props.active ? '#9f9f9f' : '#fff'};
-  color: ${props => props.active ? '#fff' : '#9f9f9f'};
+  background: #fff;
+  color: ${props => props.active ? '#0f0f0f' : '#9f9f9f'};
   padding: 4px;
   white-space: pre;
   margin-bottom: 4px;
@@ -183,7 +194,8 @@ const FilterOptionDropdownInput = styled.input`
 `;
 
 const FilterOptionDropdownButton = styled.div`
-
+  display: inline-flex;
+  float: right;
 `;
 
 class Filter extends Component {
@@ -192,6 +204,7 @@ class Filter extends Component {
     super(props);
     this.state = {
       isFiltering: false,
+      hasFilters: false,
       isChangingSort: false,
       isChangingPrice: false,
       isChangingTags: false,
@@ -206,11 +219,20 @@ class Filter extends Component {
     console.log(activeSort)
     console.log(selectedSort);
     if (selectedSort === activeSort) {
-      this.setState({ activeSort: "", isChangingSort: false, })
+      this.setState({ activeSort: "", isChangingSort: false, hasFilters: false, })
     } else {
-      this.setState({ activeSort: selectedSort, isChangingSort: false, })
+      this.setState({ activeSort: selectedSort, isChangingSort: false, hasFilters: true, })
     }
     this.props.onSort(selectedSort)
+  }
+
+  handlePrice() {
+    let { minPrice, maxPrice } = this.state
+    console.log(minPrice);
+    this.props.onPrice(minPrice, maxPrice)
+    this.setState({
+      isChangingPrice: false
+    })
   }
 
   render() {
@@ -223,21 +245,22 @@ class Filter extends Component {
           <PoseGroup>
             {this.state.isFiltering
               ?
-              <FilterToggleIcon key="0">
+              <StyledFilterToggleIcon key="0">
                 <i className="material-icons" onClick={() => this.setState({ isFiltering: false, isChangingSort: false, isChangingPrice: false, isChangingTags: false, })}>close</i>
-              </FilterToggleIcon>
+              </StyledFilterToggleIcon>
 
               :
-              <FilterToggleIcon key="1">
+              <StyledFilterToggleIcon key="1">
                 <i className="material-icons">filter_list</i>
-              </FilterToggleIcon>
+                {this.state.hasFilters && <FilterIndicator />}
+              </StyledFilterToggleIcon>
             }
           </PoseGroup>
         </FilterToggleIconWrapper>
         {this.state.isFiltering &&
             <FilterOptions>
               <FilterOptionWrapper>
-                <FilterOptionToggle onClick={() => this.setState({ isChangingSort: !this.state.isChangingSort })}>
+                <FilterOptionToggle active={this.state.activeSort !== ''} onClick={() => this.setState({ isChangingSort: !this.state.isChangingSort })}>
                   Sort by
                 </FilterOptionToggle>
                 <PoseGroup>
@@ -284,6 +307,7 @@ class Filter extends Component {
                         Max
                         <FilterOptionDropdownInput type="number" value={this.state.maxPrice} onChange={(e) => this.setState({ maxPrice: e.target.value })} step="0.01"/>
                       </FilterOptionDropdownInputWrapper>
+                      <span onClick={() => this.handlePrice()}>Done</span>
                     </StyledFilterOptionDropdown>
                   }
                 </PoseGroup>

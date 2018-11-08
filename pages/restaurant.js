@@ -137,7 +137,7 @@ const SwiperContainer = posed.div({
 const StyledSwiperContainer = styled(SwiperContainer)`
   width: 100vw;
   height: 100vh;
-  position: fixed;
+  position: absolute;
   transform: translateX(100vw);
   top: 0;
   z-index: 8888;
@@ -348,6 +348,31 @@ class Restaurant extends Component {
     }
   }
 
+  handlePrice(minPrice, maxPrice) {
+    const {dishes, sectionDishes, activeSection} = this.state
+    console.log(sectionDishes);
+    if (activeSection === '') {
+      const pricedDishes = _.filter(dishes, function(o) { return minPrice < o.price && o.price < maxPrice });
+      console.log(pricedDishes);
+      const groupedDishes = _.groupBy(pricedDishes, 'section')
+      this.setState({
+        groupedDishes,
+        sectionDishes: pricedDishes,
+      })
+      console.log(pricedDishes);
+    } else {
+      console.log('active section');
+      const pricedDishes = _.filter(dishes, function(o) { return minPrice < o.price && o.price < maxPrice });
+      const groupedDishes = _.groupBy(pricedDishes, 'section')
+      const sectionDishes = groupedDishes[activeSection]
+      console.log(pricedDishes);
+      this.setState({
+        groupedDishes,
+        sectionDishes,
+      })
+    }
+  }
+
   render() {
 
     if (typeof window !== 'undefined' && this.state.isSearching) {
@@ -375,7 +400,7 @@ class Restaurant extends Component {
           <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
           <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
         </Head>
-        <Filter onSort={(selectedSort) => this.handleSort(selectedSort)}/>
+        <Filter onSort={(selectedSort) => this.handleSort(selectedSort)} onPrice={(minPrice, maxPrice) => this.handlePrice(minPrice, maxPrice)}/>
         {this.props.restaurant.action === "call" &&
           <ActionButton innerRef={this.actionButton} href={`tel: ${this.props.restaurant.phone}`}>
             Call
@@ -409,7 +434,7 @@ class Restaurant extends Component {
             <DishCardsFilter active={this.state.activeSection === ''} onClick={() => this.setState({ activeSection: '', sectionDishes: this.state.dishes })}>
               All
             </DishCardsFilter>
-            {this.state.sections.map((section) =>
+            {this.state.sections && this.state.sections.map((section) =>
               <DishCardsFilter
                 key={section}
                 active={this.state.activeSection === section}
@@ -419,32 +444,43 @@ class Restaurant extends Component {
             }
           </DishCardsFilters>
           <DishCards>
-            <PoseGroup>
-              {this.state.sectionDishes.map((dish) =>
-                <StyledPosedDishCard
-                  key={dish.id}
-                  onClick={() => this.handleDishView(dish.id)}><DishCard
-                  dish={dish}/>
-                </StyledPosedDishCard>)
-              }
-            </PoseGroup>
+            {this.state.sectionDishes && this.state.sectionDishes.length > 0
+              ?
+                <PoseGroup>
+                  {this.state.sectionDishes.map((dish) =>
+                    <StyledPosedDishCard
+                      key={dish.id}
+                      onClick={() => this.handleDishView(dish.id)}><DishCard
+                      dish={dish}/>
+                    </StyledPosedDishCard>)
+                  }
+                </PoseGroup>
+              :
+                <div>
+                  No results
+                </div>
+            }
+
           </DishCards>
 
         </Scroller>
-        <PoseGroup>
-          {this.state.activeDish !== "" &&
-            <StyledSwiperContainer key="0">
-              <Swiper
-                dish={this.state.activeDish}
-                restaurant={this.props.restaurant}
-                dishes={this.state.isSearching ? this.state.results : this.state.sectionDishes}
-                dishIndex={this.state.isSearching ?  _.findIndex(this.state.results, { id: this.state.activeDish }) :  _.findIndex(this.state.sectionDishes, { id: this.state.activeDish })}
-                title={this.state.isSearching ? 'results' : this.state.activeSection}
-                isVisible={this.state.activeDish !== ""}
-                handleCollapse={() => this.setState({ activeDish: "" })}/>
-            </StyledSwiperContainer>
-          }
-        </PoseGroup>
+        <div style={{position: 'fixed', top: 0, zIndex: '888'}}>
+          <PoseGroup>
+            {this.state.activeDish !== "" &&
+              <StyledSwiperContainer key="0">
+                <Swiper
+                  dish={this.state.activeDish}
+                  restaurant={this.props.restaurant}
+                  dishes={this.state.isSearching ? this.state.results : this.state.sectionDishes}
+                  dishIndex={this.state.isSearching ?  _.findIndex(this.state.results, { id: this.state.activeDish }) :  _.findIndex(this.state.sectionDishes, { id: this.state.activeDish })}
+                  title={this.state.isSearching ? 'results' : this.state.activeSection}
+                  isVisible={this.state.activeDish !== ""}
+                  handleCollapse={() => this.setState({ activeDish: "" })}/>
+              </StyledSwiperContainer>
+            }
+          </PoseGroup>
+        </div>
+
       </RestaurantWrapper>
     );
   }

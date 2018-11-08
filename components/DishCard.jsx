@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import posed from 'react-pose'
 import _ from 'lodash'
+import LazyLoad from 'react-lazyload';
 
 const DishCardWrapper = posed.article({
   pressable: true,
@@ -75,7 +76,9 @@ class DishCard extends Component {
   render() {
     return (
       <StyledDishCardWrapper onPressEnd={() => this.props.handleDishCardClick(this.props.dish.id)}>
-        <DishCardImage image={this.props.dish.image}/>
+        <LazyLoad height={164} offset={100}>
+          <DishCardImage image={this.props.dish.image}/>
+        </LazyLoad>
         <DishCardContent>
           <DishCardTitle>
             {this.props.dish.name}

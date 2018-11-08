@@ -4235,6 +4235,11 @@ react-is@^16.5.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.6.0.tgz#456645144581a6e99f6816ae2bd24ee94bdd0c01"
   integrity sha512-q8U7k0Fi7oxF1HvQgyBjPwDXeMplEsArnKt2iYhuIF86+GBbgLHdAmokL3XUFjTd7Q363OSNG55FOGUdONVn1g==
 
+react-lazyload@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-lazyload/-/react-lazyload-2.3.0.tgz#ccb134223012447074a96543954f44b055dc6185"
+  integrity sha512-0z3qmL+qtSERdfKFpn0yKXm+1Gg1ZLZBXnCzHhSGiu1L8iDARuCkbOypxEx9+ETxZvMnXj98xvWCs5jyXTuM2w==
+
 react-pose@^3.3.7:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/react-pose/-/react-pose-3.3.7.tgz#0938d0661681208c2fb9716af48ccfcf8dab77ba"
