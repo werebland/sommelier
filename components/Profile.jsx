@@ -10,7 +10,7 @@ const ProfileWrapper = styled.div`
   right: 0;
   z-index: -1;
   background: #f0f0f0;
-  background-image: url(${props => props.background});
+  background-image: url(${props => props.image});
   background-size: cover;
   background-position: center;
   display: flex;
@@ -60,8 +60,8 @@ const ProfileSubtitle = styled.span`
   }
 `;
 
-const Profile = ({name, cuisine, priceRange, background, address}) => (
-  <ProfileWrapper background={background}>
+const Profile = ({name, cuisine, priceRange, image, address}) => (
+  <ProfileWrapper image={image}>
     <ProfileContent>
       <ProfileTitle>
         {name}

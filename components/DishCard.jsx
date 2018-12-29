@@ -28,7 +28,7 @@ const StyledDishCardWrapper = styled.div`
   width: 100%;
   height: auto;
   position: relative;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
   background: #FFFFFF;
   display: flex;

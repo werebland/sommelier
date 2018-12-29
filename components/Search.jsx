@@ -24,7 +24,7 @@ const StyledSearchWrapper = styled(SearchWrapper)`
   height: 40px;
   background: #FFFFFF;
   box-shadow: 0 2px 16px -2px rgba(0,0,0,0.32);
-  border-radius: ${props => props.expanded ? '0' : '4px'};
+  border-radius: ${props => props.expanded ? '0' : '8px'};
   margin-left: 16px;
   position: ${props => props.expanded ? 'fixed' : 'sticky'};
   transform: translateY(-20px);
@@ -56,7 +56,7 @@ const SearchInput = styled.input`
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  padding: 0 8px;
+  padding: 0 8px 0 0;
   margin: 0;
   font-size: 1rem;
   font-weight: 400;
@@ -159,7 +159,7 @@ class Search extends Component {
       maxPatternLength: 32,
       minMatchCharLength: 1,
       keys: [
-        "title",
+        "name",
         "type",
         "family",
     ]
@@ -186,7 +186,7 @@ class Search extends Component {
             onFocus={() => this.state.expanded === false && this.handleExpand()}
             onChange={(e) => this.setState({ term: e.target.value })}
             value={this.state.term}
-            placeholder={this.props.sticky ? 'Search' : 'Search Dishes'}/>
+            placeholder={this.props.sticky ? 'Search' : 'Search dishes'}/>
         </SearchInputWrapper>
         {this.state.expanded && this.state.term !== "" &&
           <SearchResults>

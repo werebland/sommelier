@@ -9,12 +9,24 @@ const SwiperWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   position: absolute;
-  background: #0f0f0f;
+  background: transparent;
   display: flex;
   flex-flow: column nowrap;
   color: #fff;
-  padding-top: 40px;
   box-sizing: border-box;
+`;
+
+const SwiperHeader = styled.div`
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const SwiperCollapse = styled.i`
@@ -23,36 +35,22 @@ const SwiperCollapse = styled.i`
   color: #fff;
   cursor: pointer;
   display: block;
-  position: absolute;
-  top: 16px;
-  left: 16px;
-`;
-
-const SwiperShare = styled.i`
-  width: 24px;
-  height: 24px;
-  color: #fff;
-  cursor: pointer;
-  display: block;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-`;
-
-const SwiperHeader = styled.div`
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
+  position: relative;
 `;
 
 const SwiperTitle = styled.h3`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #fff;
   margin: 0;
+  width: 100vw;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: -1;
+  box-sizing: border-box;
+  padding-left: 32px;
 `;
 
 const SwiperStatus = styled.div`
@@ -71,20 +69,38 @@ const SwiperSlick = styled.div`
   width: 100%;
 `;
 
+const DishSlideWrapper = styled.div`
+  width: calc( 100vw - 10px );
+  height: 100%;
+  min-height: 100vh;
+  background: transparent;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-sizing: border-box;
+  padding-right: 10px;
+  color: #1f1f1f;
+`;
+
 const DishSlide = styled.div`
   width: 100%;
   height: 100%;
+  min-height: 100vh;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   display: flex;
   flex-flow: column nowrap;
+  background: #fff;
 `;
 
 const DishSlideImage = styled.div`
-  width: 100vw;
+  width: 100%;
   height: calc(100vw/1.7777);
   display: block;
   background-image: url(${props => props.image});
   background-size: cover;
   background-position: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 `;
 
 const DishSlideContent = styled.div`
@@ -99,7 +115,7 @@ const DishSlideContent = styled.div`
 const DishSlideTitle = styled.h3`
   font-size: 1.25rem;
   font-weight: 700;
-  color: #fff;
+  color: #1f1f1f;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -109,14 +125,14 @@ const DishSlideTitle = styled.h3`
 const DishSlideSubtitle = styled.span`
   font-size: 1rem;
   font-weight: 400;
-  color: #fff;
+  color: #1f1f1f;
   margin-bottom: 8px;
 `;
 
 const DishSlideDescription = styled.p`
   font-size: 1rem;
   font-weight: 400;
-  color: #fff;
+  color: #1f1f1f;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -187,24 +203,23 @@ class Swiper extends Component {
       dots: false,
       arrows: false,
       initialSlide: this.props.dishIndex,
-      infinite: true,
+      infinite: false,
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
       afterChange: current => this.setState({ slideIndex: current }),
+      centerMode: true,
+      centerPadding: '10px'
     };
 
     return (
       <SwiperWrapper>
-        <SwiperCollapse className="material-icons" onClick={() => this.props.handleCollapse()}>
-          close
-        </SwiperCollapse>
-        <SwiperShare className="material-icons" onClick={() => this.handleShare()}>
-          open_in_new
-        </SwiperShare>
         <SwiperHeader>
+          <SwiperCollapse className="material-icons" onClick={() => this.props.handleCollapse()}>
+            close
+          </SwiperCollapse>
           <SwiperTitle>
-            {this.props.title === "" ? 'All' : this.props.title}
+            {this.props.title === "" ? 'All' : _.upperFirst(this.props.title)}
           </SwiperTitle>
           <SwiperStatus>
             <i className="material-icons" onClick={() => this.slider.slickGoTo(this.state.slideIndex - 1)}>chevron_left</i>
@@ -216,22 +231,23 @@ class Swiper extends Component {
         <SwiperSlick>
           <Slider ref={slider => (this.slider = slider)} {...settings}>
             {this.props.dishes.map((dish) =>
-              <DishSlide key={dish.id}>
-                <DishSlideImage image={dish.image}/>
-                <DishSlideContent>
-                  <DishSlideTitle>
-                    {dish.name}
-                    <span>${dish.price}</span>
-                  </DishSlideTitle>
-                  <DishSlideSubtitle>
-                    {dish.section} · {dish.type}
-                  </DishSlideSubtitle>
-                  <DishSlideDescription>
-                    {dish.description}
-                  </DishSlideDescription>
-                </DishSlideContent>
-
-              </DishSlide>
+              <DishSlideWrapper key={dish.id}>
+                <DishSlide>
+                  <DishSlideImage image={dish.image}/>
+                  <DishSlideContent>
+                    <DishSlideTitle>
+                      {dish.name}
+                      <span>${dish.price}</span>
+                    </DishSlideTitle>
+                    <DishSlideSubtitle>
+                      {dish.section} · {dish.type}
+                    </DishSlideSubtitle>
+                    <DishSlideDescription>
+                      {dish.description}
+                    </DishSlideDescription>
+                  </DishSlideContent>
+                </DishSlide>
+              </DishSlideWrapper>
             )}
           </Slider>
         </SwiperSlick>
