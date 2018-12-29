@@ -18,9 +18,8 @@ const SwiperWrapper = styled.div`
 
 const SwiperHeader = styled.div`
   width: 100%;
-  height: 40px;
-  min-height: 40px;
-  padding: 0 10px;
+  height: auto;
+  padding: 20px 10px;
   box-sizing: border-box;
   display: flex;
   flex-shrink: 0;
@@ -134,8 +133,39 @@ const DishSlideDescription = styled.p`
   font-weight: 400;
   color: #1f1f1f;
   padding: 0;
-  margin: 0;
+  margin: 0 0 8px 0;
   box-sizing: border-box;
+`;
+
+const DishSlideLabel = styled.span`
+  font-size: .875rem;
+  font-weight: 400;
+  color: #9f9f9f;
+  margin-bottom: 4px;
+`;
+
+const DishSlideOptions = styled.ul`
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 0;
+  margin: 0 0 8px 0;
+`;
+
+const DishSlideOption = styled.li`
+  width: 100%;
+  list-style: none;
+  display: inline-flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #1f1f1f;
+
+  & strong {
+    font-weight: 700;
+  }
 `;
 
 const SharerContainer = posed.div({
@@ -242,9 +272,29 @@ class Swiper extends Component {
                     <DishSlideSubtitle>
                       {dish.section} · {dish.type}
                     </DishSlideSubtitle>
+                    <DishSlideLabel>
+                      Description
+                    </DishSlideLabel>
                     <DishSlideDescription>
                       {dish.description}
                     </DishSlideDescription>
+                    {dish.options &&
+                      <React.Fragment>
+                        <DishSlideLabel>
+                          Options
+                        </DishSlideLabel>
+                        <DishSlideOptions>
+                          {dish.options.map((option, i) =>
+                            <DishSlideOption key={i}>
+                              {option.name}
+                              <strong>
+                                ${option.price}
+                              </strong>
+                            </DishSlideOption>
+                          )}
+                        </DishSlideOptions>
+                      </React.Fragment>
+                    }
                   </DishSlideContent>
                 </DishSlide>
               </DishSlideWrapper>

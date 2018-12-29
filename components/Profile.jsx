@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import ProfileCard from './ProfileCard'
+
 const ProfileWrapper = styled.div`
   width: 100%;
   height: 200px;
@@ -62,15 +64,6 @@ const ProfileSubtitle = styled.span`
 
 const Profile = ({name, cuisine, priceRange, image, address}) => (
   <ProfileWrapper image={image}>
-    <ProfileContent>
-      <ProfileTitle>
-        {name}
-      </ProfileTitle>
-      <ProfileSubtitle>
-        {cuisine} · {priceRange} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${address}`} target="blank">{address}</a>
-      </ProfileSubtitle>
-    </ProfileContent>
-
   </ProfileWrapper>
 );
 

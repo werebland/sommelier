@@ -25,7 +25,7 @@ const StyledSearchWrapper = styled(SearchWrapper)`
   background: #FFFFFF;
   box-shadow: 0 2px 16px -2px rgba(0,0,0,0.32);
   border-radius: ${props => props.expanded ? '0' : '8px'};
-  margin-left: 16px;
+  margin-left: 20px;
   position: ${props => props.expanded ? 'fixed' : 'sticky'};
   transform: translateY(-20px);
   top: 36px;
@@ -174,8 +174,8 @@ class Search extends Component {
         pose={this.state.expanded ? 'expanded' : 'collapsed'}
         expanded={this.state.expanded}
         width={this.state.expanded ? '100vw' : this.props.width }
-        left={this.props.sticky ? '72px' : '0'}
-        leftOffset={this.props.sticky ? '-88px' : '-16px'}
+        left={'0'}
+        leftOffset={this.props.sticky ? '-84px' : '-20px'}
         style={{width: this.props.width}}>
         <SearchInputWrapper expanded={this.state.expanded}>
           <SearchIcon className="material-icons" onClick={() => this.state.expanded === true && this.handleCollapse()} expanded={this.state.expanded}>

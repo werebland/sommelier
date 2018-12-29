@@ -8,6 +8,7 @@ import firestore from 'firebase/firestore'
 import moment from 'moment'
 
 import Profile from '../components/Profile'
+import ProfileCard from '../components/ProfileCard'
 import Search from '../components/Search'
 import DishCard from '../components/DishCard'
 import Swiper from '../components/Swiper'
@@ -67,7 +68,7 @@ const DishCards = styled.div`
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
-  padding: 0 16px;
+  padding: 60px 20px 0 20px;
   box-sizing: border-box;
 `;
 
@@ -120,7 +121,7 @@ const StyledPosedDishCard = styled(PosedDishCard)`
   margin-bottom: 16px;
   scale: 1;
   transform-origin: center !important;
-  border-radius: 4px;
+  border-radius: 8px;
   background: transparent;
 `;
 
@@ -480,25 +481,7 @@ class Restaurant extends Component {
             <Overlay key="1"/>
           }
         </PoseGroup>
-        <Filter
-          filtering={this.state.isFiltering}
-          changingSort={this.state.isChangingSort}
-          changingPrice={this.state.isChangingPrice}
-          changingTags={this.state.isChangingTags}
-          startFilter={() => this.setState({ isFiltering: true })}
-          endFilter={() => this.setState({ isFiltering: false, isChangingFilter: false, isChangingSort: false, isChangingPrice: false, isChangingTags: false })}
-          startChangingSort={() => this.setState({ isChangingSort: true, isChangingPrice: false, isChangingTags: false, isChangingFilter: true, })}
-          endChangingSort={() => this.setState({ isChangingSort: false, isChangingFilter: false, })}
-          startChangingPrice={() => this.setState({ isChangingPrice: true, isChangingTags: false, isChangingSort: false, isChangingFilter: true, })}
-          endChangingPrice={() => this.setState({ isChangingPrice: false, isChangingFilter: false, })}
-          startChangingTags={() => this.setState({ isChangingTags: true, isChangingSort: false, isChangingPrice: false, isChangingFilter: true, })}
-          endChangingTags={() => this.setState({ isChangingTags: false, isChangingFilter: false, })}
-          onSort={(selectedSort) => this.handleSort(selectedSort)}
-          onPrice={(minPrice, maxPrice) => this.handlePrice(minPrice, maxPrice)}
-          activePrice={this.state.activePrice}
-          activeSort={this.state.activeSort}
-          activeTags={this.state.activeTags}
-        />
+
         <PoseGroup preEnterPose="preEnter">
          { isFiltering && isChangingFilter &&
            <Test key="1" style={{ position: 'fixed', top: 0, left: 16 }}>
@@ -513,18 +496,14 @@ class Restaurant extends Component {
            </Test>
          }
         </PoseGroup>
-        <ActionButton
-          innerRef={this.actionButton}
-          href={this.props.restaurant.action === "call" ? `tel: ${this.props.restaurant.phone}` : this.props.restaurant[this.props.restaurant.action]}>
-          {_.upperFirst(this.props.restaurant.action)}
-        </ActionButton>
         <Profile
-          name={this.props.restaurant.name}
           image={this.props.restaurant.image}
-          cuisine={this.props.restaurant.cuisine}
-          priceRange={this.props.restaurant.price}
-          address={this.props.restaurant.address.street}
         />
+        <ProfileCard
+          restaurant={this.props.restaurant}
+          sections={this.state.sections}
+          activeSection={this.state.activeSection}
+          handleSectionSelect={(section) => section === "" ? this.setState({ activeSection: section, sectionDishes: this.state.dishes }) : this.setState({ activeSection: section, sectionDishes: this.state.groupedDishes[section] })}/>
         <Scroller>
           <PoseGroup>
             {this.state.isLoading
@@ -534,28 +513,6 @@ class Restaurant extends Component {
                 </Test>
               :
                 <Test key="1">
-                  <Search
-                      dishes={this.state.dishes}
-                      sticky={this.state.isSticky}
-                      width={this.state.isSticky ? `calc(100vw - 32px - ${this.actionButton.current.offsetWidth}px - 16px - 56px)` : 'calc(100vw - 32px)'}
-                      handleExpandSearch={() => this.setState({ isSearching: true })}
-                      handleCollapseSearch={() => this.setState({ isSearching: false })}
-                      handleDishCardClick={(id, result) => this.handleDishView(id, result)}/>
-                  <DishCardsFilters>
-                    <DishCardsFilter active={this.state.activeSection === ''} onClick={() => this.setState({ activeSection: '', sectionDishes: this.state.dishes })}>
-                      All
-                    </DishCardsFilter>
-                    {this.state.sections && this.state.sections.map((section) =>
-                      <DishCardsFilter
-                        key={section}
-                        active={this.state.activeSection === section}
-                        onClick={() => this.setState({ activeSection: section, sectionDishes: this.state.groupedDishes[section] })}>
-                          {_.upperFirst(section)}
-                        </DishCardsFilter>)
-                    }
-                    <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
-                    </div>
-                  </DishCardsFilters>
                   <DishCards>
                     {this.state.sectionDishes && this.state.sectionDishes.length > 0
                       ?
