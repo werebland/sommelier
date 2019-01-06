@@ -6,21 +6,22 @@ import _ from 'lodash'
 import base from '../config'
 import firestore from 'firebase/firestore'
 import moment from 'moment'
+import Fuse from 'fuse.js'
+import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 import Profile from '../components/Profile'
 import ProfileCard from '../components/ProfileCard'
-import Search from '../components/Search'
 import DishCard from '../components/DishCard'
 import Swiper from '../components/Swiper'
 import Filter from '../components/Filter'
-import FilterSubBar from '../components/FilterSubBar'
+import DishesList from '../components/DishesList'
 
 const RestaurantWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
-  background: #f7f7f7;
+  background: #fff;
 `;
 
 const ActionButton = styled.a`
@@ -50,6 +51,7 @@ const Scroller = styled.div`
   min-height: 100vh;
   margin-top: 200px;
   background: transparent;
+  padding-top: 40px;
 
   & .sticky-events--sentinel {
       left: 0;
@@ -68,7 +70,7 @@ const DishCards = styled.div`
   height: 100%;
   display: flex;
   flex-flow: column nowrap;
-  padding: 60px 20px 0 20px;
+  padding: 20px;
   box-sizing: border-box;
 `;
 
@@ -205,6 +207,101 @@ const Overlay = styled(PosedOverlay)`
   z-index: 88;
 `;
 
+const PosedSearchContainer = posed.div({
+    enter: {
+      opacity: 1,
+      height: 60,
+    },
+    preEnter: {
+      opacity: 0,
+      height: 0,
+    },
+    exit: {
+      opacity: 0,
+      height: 0,
+    }
+})
+
+const SearchContainer = styled(PosedSearchContainer)`
+  width: 100%;
+  padding: 20px 20px 0 20px;
+  box-sizing: border-box;
+`;
+
+const SearchInput = styled.input`
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1f1f1f;
+  height: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border: 0;
+  box-shadow: 0;
+  outline: none;
+  border-bottom: 1px solid #9f9f9f;
+  background: transparent;
+  transition: 0.3s ease-out all;
+
+  &::placeholder {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #9f9f9f;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0;
+    border-bottom: 1px solid #1f1f1f;
+  }
+`;
+
+const PosedLoading = posed.div({
+  enter: {
+    opacity: 1,
+    y: 0,
+  },
+  preEnter: {
+    opacity: 0,
+    y: -56,
+  },
+  exit: {
+    opacity: 0,
+    y: -56,
+  }
+})
+
+const Loading = styled(PosedLoading)`
+  width: 100vw;
+  height: calc(100vh - 200px);
+  position: absolute;
+  top: 200px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  jusitify-content: center;
+  opacity: 1;
+`;
+
+const Section = styled(Element)`
+  width: 100%;
+  padding-top: 20px;
+`;
+
+const SectionTitle = styled.h3`
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin: 0;
+  width: 100%;
+  padding-left: 20px;
+  box-sizing: border-box;
+`;
+
 class Restaurant extends Component {
 
   constructor(props) {
@@ -215,21 +312,23 @@ class Restaurant extends Component {
       sections: [],
       dishes: [],
       filteredDishes: [],
+      groupedDishes: {},
       isSearching: false,
-      isSticky: false,
       sectionDishes: [],
       isFiltering: false,
-      isChangingSort: false,
-      isChangingPrice: false,
-      isChangingTags: false,
-      activeSort: "",
-      activeTags: [],
-      activePrice: [],
       isLoading: true,
       isChangingFilter: false,
       overlayVisible: false,
+      term: '',
+      currentDishes: [],
+      filters: {
+        section: '',
+        sortBy: '',
+        priceMin: '',
+        priceMax: '',
+        tags: [],
+      }
     };
-    this.actionButton = React.createRef()
   }
 
   static async getInitialProps({ query }) {
@@ -256,9 +355,6 @@ class Restaurant extends Component {
     if (Object.keys(this.props.restaurant).length > 0) {
       console.log(this.props.restaurant);
       this.fetchDishes()
-      if (window) {
-        window.addEventListener('scroll', this.handleScroll.bind(this));
-      }
       let date = moment().format('YYYYMMDD')
       // let views = this.props.restaurant.views
       // if (_.has(views, date)) {
@@ -277,21 +373,6 @@ class Restaurant extends Component {
       //   }).catch(err => {
       //   console.log(err);
       // });
-    }
-  }
-
-  componentWillUnmount(){
-    window.removeEventListener('scroll', this.handleScroll.bind(this));
-  }
-
-  handleScroll() {
-    let scrollY = window.scrollY
-    if (scrollY >= 160) {
-      this.setState({ isSticky: true})
-    } else {
-      this.setState({
-        isSticky: false
-      })
     }
   }
 
@@ -447,15 +528,30 @@ class Restaurant extends Component {
 
   }
 
-  render() {
+  filterDishes(type, value) {
+    let { dishes, groupedDishes, filteredDishes } = this.state
+    if (filteredDishes.length !== dishes.length) {
+      switch (type) {
+        case 'section':
+          if (value === '') {
+            filteredDishes = dishes
+            this.setState({ filteredDishes })
+          } else {
+            filteredDishes = groupedDishes[value]
+            this.setState({ filteredDishes })
+          }
+          break;
+        case 'sort':
 
-    if (typeof window !== 'undefined' && this.state.isSearching) {
-      window.document.body.style.overflowY = 'hidden'
-    } else if (typeof window !== 'undefined' && !this.state.isSearching) {
-      window.document.body.style.overflowY = 'auto'
+          break;
+        default:
+      }
     } else {
 
     }
+  }
+
+  render() {
 
     if (Object.keys(this.props.restaurant).length === 0) {
       return (
@@ -469,6 +565,24 @@ class Restaurant extends Component {
 
     let { isFiltering, isChangingFilter } = this.state
 
+    var options = {
+      shouldSort: true,
+      threshold: 0.4,
+      location: 0,
+      distance: 80,
+      maxPatternLength: 32,
+      minMatchCharLength: 1,
+      keys: [
+        "name",
+        "type",
+        "family",
+    ]
+    };
+
+    var fuse = new Fuse(this.state.sectionDishes, options); // "list" is the item array
+
+    var results = fuse.search(this.state.term);
+
     return (
       <RestaurantWrapper>
         <Head>
@@ -481,21 +595,6 @@ class Restaurant extends Component {
             <Overlay key="1"/>
           }
         </PoseGroup>
-
-        <PoseGroup preEnterPose="preEnter">
-         { isFiltering && isChangingFilter &&
-           <Test key="1" style={{ position: 'fixed', top: 0, left: 16 }}>
-             <FilterSubBar
-               changingSort={this.state.isChangingSort}
-               changingPrice={this.state.isChangingPrice}
-               changingTags={this.state.isChangingTags}
-               onSort={(selectedSort) => this.handleSort(selectedSort)}
-               onPrice={(minPrice, maxPrice) => this.handlePrice(minPrice, maxPrice)}
-               onTags={(tags) => this.handleTags(tags)}
-             />
-           </Test>
-         }
-        </PoseGroup>
         <Profile
           image={this.props.restaurant.image}
         />
@@ -503,34 +602,56 @@ class Restaurant extends Component {
           restaurant={this.props.restaurant}
           sections={this.state.sections}
           activeSection={this.state.activeSection}
-          handleSectionSelect={(section) => section === "" ? this.setState({ activeSection: section, sectionDishes: this.state.dishes }) : this.setState({ activeSection: section, sectionDishes: this.state.groupedDishes[section] })}/>
+          handleSectionSelect={(section) => section === "" ? this.setState({ activeSection: section, sectionDishes: this.state.dishes }) : this.setState({ activeSection: section, sectionDishes: this.state.groupedDishes[section] })}
+          toggleSearch={() => this.setState({
+            isSearching: !this.state.isSearching,
+            isFiltering: false,
+          })}
+          toggleFilter={() => this.setState({
+            isFiltering: !this.state.isFiltering,
+            isSearching: false,
+          })}/>
         <Scroller>
+          <PoseGroup preEnterPose="preEnter">
+            {this.state.isSearching &&
+              <SearchContainer key='0'>
+                <SearchInput
+                  type="search"
+                  placeholder={`Search ${this.state.sectionDishes.length} dishes`}
+                  autoFocus
+                  value={this.state.term}
+                  onChange={(e) => this.setState({ term: e.target.value})}/>
+              </SearchContainer>
+            }
+          </PoseGroup>
+          <PoseGroup preEnterPose="preEnter">
+            {this.state.isFiltering &&
+              <SearchContainer key="1">
+                <Filter />
+              </SearchContainer>
+            }
+          </PoseGroup>
           <PoseGroup>
-            {this.state.isLoading
+            {this.state.isLoading && this.state.groupedDishes
               ?
-                <Test key="0">
-                 <span style={{ margin: 'auto'}}> Loading </span>
-                </Test>
+                <Loading key="0">
+                  <span style={{ margin: 'auto'}}> Loading </span>
+                </Loading>
               :
                 <Test key="1">
-                  <DishCards>
-                    {this.state.sectionDishes && this.state.sectionDishes.length > 0
-                      ?
-                        <PoseGroup>
-                          {this.state.sectionDishes.map((dish) =>
-                            <StyledPosedDishCard
-                              key={dish.id}
-                              onClick={() => this.handleDishView(dish.id)}><DishCard
-                              dish={dish}/>
-                            </StyledPosedDishCard>)
-                          }
-                        </PoseGroup>
-                      :
-                        <div>
-                          No results
-                        </div>
-                    }
-                  </DishCards>
+                  {this.state.isSearching && this.state.term !== ''
+                    ?
+                    <DishesList dishes={results} onDishClick={(id) => this.handleDishView(id)}/>
+                    :
+                    <React.Fragment>
+                      {this.state.sections && this.state.sections.map((section) => (
+                        <Section name={section} key={section}>
+                          <SectionTitle>{section}</SectionTitle>
+                          <DishesList dishes={this.state.groupedDishes[section]} />
+                        </Section>
+                      ))}
+                    </React.Fragment>
+                  }
                 </Test>
             }
           </PoseGroup>
@@ -542,9 +663,9 @@ class Restaurant extends Component {
                 <Swiper
                   dish={this.state.activeDish}
                   restaurant={this.props.restaurant}
-                  dishes={this.state.isSearching ? this.state.results : this.state.sectionDishes}
-                  dishIndex={this.state.isSearching ?  _.findIndex(this.state.results, { id: this.state.activeDish }) :  _.findIndex(this.state.sectionDishes, { id: this.state.activeDish })}
-                  title={this.state.isSearching ? 'results' : this.state.activeSection}
+                  dishes={this.state.sectionDishes}
+                  dishIndex={_.findIndex(this.state.sectionDishes, { id: this.state.activeDish })}
+                  title={this.state.activeSection}
                   isVisible={this.state.activeDish !== ""}
                   handleCollapse={() => this.setState({ activeDish: "", overlayVisible: false })}/>
               </StyledSwiperContainer>

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import _ from 'lodash'
+import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 const ProfileCardWrapper = styled.div`
   width: calc(100vw - 40px);
@@ -17,6 +18,7 @@ const ProfileCardWrapper = styled.div`
   left: 20px;
   top: 95px;
   z-index: 88;
+  overflow: hidden;
 `;
 
 const ProfileCardUpper = styled.div`
@@ -59,6 +61,7 @@ const ProfileCardButton = styled.a`
   border-radius: 8px;
   padding: 8px 16px;
   margin-bottom: 8px;
+  margin-right: 8px;
   text-decoration: none;
 `;
 
@@ -94,9 +97,12 @@ const ProfileCardIcon = styled.i`
 const ProfileCardSections = styled.div`
   display: flex;
   flex: 1;
-  overflow: scroll;
   flex-flow: row nowrap;
   align-items: center;
+  margin-bottom: -50px;
+  padding-bottom: 50px;
+  overflow-y: hidden;
+  overflow-x: scroll;
 `;
 
 const ProfileCardSection = styled.span`
@@ -108,7 +114,7 @@ const ProfileCardSection = styled.span`
   white-space: pre;
 `;
 
-const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect}) => (
+const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect, toggleSearch, toggleFilter}) => (
   <ProfileCardWrapper>
     <ProfileCardUpper>
         <ProfileCardTitle>
@@ -117,30 +123,36 @@ const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect})
         <ProfileCardSubtitle>
           {restaurant.cuisine} · {restaurant.price} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`} target="blank">{restaurant.address.street}</a>
         </ProfileCardSubtitle>
-        <ProfileCardButton
-          target="blank"
-          href={restaurant.action === "call" ? `tel: ${restaurant.phone}` : restaurant[restaurant.action]}
-        >
-          {_.upperFirst(restaurant.action)}
-        </ProfileCardButton>
+        <div>
+          <ProfileCardButton
+            target="blank"
+            href={restaurant.action === "call" ? `tel: ${restaurant.phone}` : restaurant[restaurant.action]}
+          >
+            {_.upperFirst(restaurant.action)}
+          </ProfileCardButton>
+          <ProfileCardButton
+            target="blank"
+            href={restaurant.action === "call" ? `tel: ${restaurant.phone}` : restaurant[restaurant.action]}
+          >
+            Reserve
+          </ProfileCardButton>
+        </div>
+
     </ProfileCardUpper>
     <ProfileCardLower>
       <ProfileCardIcons>
-        <ProfileCardIcon className="material-icons">
+        <ProfileCardIcon className="material-icons" onClick={() => {toggleSearch()}}>
           search
         </ProfileCardIcon>
-        <ProfileCardIcon className="material-icons">
+        <ProfileCardIcon className="material-icons" onClick={() => {toggleFilter()}}>
           filter_list
         </ProfileCardIcon>
       </ProfileCardIcons>
       {sections &&
         <ProfileCardSections>
-          <ProfileCardSection onClick={() => handleSectionSelect('')} active={activeSection === ''}>
-            All
-          </ProfileCardSection>
           {sections.map((section) =>
             <ProfileCardSection key={section} onClick={() => handleSectionSelect(section)} active={activeSection === section}>
-              {section}
+              <Link activeClass="active" to={section} spy={true} smooth={true} offset={0} duration={500}>{section}</Link>
             </ProfileCardSection>
           )}
           <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
