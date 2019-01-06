@@ -109,9 +109,17 @@ const ProfileCardSection = styled.span`
   margin-right: 8px;
   font-size: 1rem;
   font-weight: 400;
-  color: ${props => props.active ? '#0f0f0f' : '#9f9f9f'};
+  color: ${props => props.active ? '#1f1f1f' : '#9f9f9f'};
   cursor: pointer;
   white-space: pre;
+
+  & a {
+    color: ${props => props.active ? '#1f1f1f' : '#9f9f9f'};
+
+    &.active {
+      color: #1f1f1f;
+    }
+  }
 `;
 
 const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect, toggleSearch, toggleFilter}) => (
@@ -137,7 +145,6 @@ const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect, 
             Reserve
           </ProfileCardButton>
         </div>
-
     </ProfileCardUpper>
     <ProfileCardLower>
       <ProfileCardIcons>

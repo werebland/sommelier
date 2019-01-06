@@ -51,7 +51,7 @@ const Scroller = styled.div`
   min-height: 100vh;
   margin-top: 200px;
   background: transparent;
-  padding-top: 40px;
+  padding: 40px 0 20px;
 
   & .sticky-events--sentinel {
       left: 0;
@@ -401,6 +401,7 @@ class Restaurant extends Component {
       const groupedDishes = _.groupBy(dishes, 'section')
       this.setState({
         sections: uniqueSections,
+        activeSection: uniqueSections[0],
         groupedDishes: groupedDishes,
         dishes: dishes,
         sectionDishes: dishes,
@@ -647,7 +648,7 @@ class Restaurant extends Component {
                       {this.state.sections && this.state.sections.map((section) => (
                         <Section name={section} key={section}>
                           <SectionTitle>{section}</SectionTitle>
-                          <DishesList dishes={this.state.groupedDishes[section]} />
+                          <DishesList dishes={this.state.groupedDishes[section]} onDishClick={(id) => this.handleDishView(id)} />
                         </Section>
                       ))}
                     </React.Fragment>

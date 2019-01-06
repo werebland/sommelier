@@ -82,6 +82,10 @@ const DishCardTitle = styled.h3`
   display: flex;
   justify-content: space-between;
   margin: 0;
+
+  & span {
+    margin-left: 4px;
+  }
 `;
 
 const DishCardSubtitle = styled.h5`
@@ -101,19 +105,21 @@ const DishCardDescription = styled.p`
 
 const DishCard = ({ dish, onDishClick }) => (
   <DishCardContainer onClick={() => onDishClick(dish.id)}>
-    <DishCardImage image={dish.image}/>
+    {dish.image !== "" &&
+      <DishCardImage image={dish.image}/>
+    }
     <DishCardContent>
       <DishCardTitle>
         {dish.name}
         <span>
-          ${dish.price}
+          ${dish.price.toFixed(2)}
         </span>
       </DishCardTitle>
       <DishCardSubtitle>
         {dish.section} · {dish.type}
       </DishCardSubtitle>
       <DishCardDescription>
-        {ellipsize(dish.description, 60)}
+        {dish.image === "" ? ellipsize(dish.description, 85) : dish.name.length > 21 ? ellipsize(dish.description, 30) : ellipsize(dish.description, 60)}
       </DishCardDescription>
     </DishCardContent>
   </DishCardContainer>
