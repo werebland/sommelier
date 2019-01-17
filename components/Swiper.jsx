@@ -68,7 +68,7 @@ const SwiperSlick = styled.div`
   width: 100%;
 `;
 
-const DishSlideWrapper = styled.div`
+const ItemSlideWrapper = styled.div`
   width: calc( 100vw - 10px );
   height: 100%;
   min-height: 100vh;
@@ -80,7 +80,7 @@ const DishSlideWrapper = styled.div`
   color: #1f1f1f;
 `;
 
-const DishSlide = styled.div`
+const ItemSlide = styled.div`
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -91,7 +91,7 @@ const DishSlide = styled.div`
   background: #fff;
 `;
 
-const DishSlideImage = styled.div`
+const ItemSlideImage = styled.div`
   width: 100%;
   height: calc(100vw/1.7777);
   display: block;
@@ -102,7 +102,7 @@ const DishSlideImage = styled.div`
   border-top-right-radius: 8px;
 `;
 
-const DishSlideContent = styled.div`
+const ItemSlideContent = styled.div`
   width: 100%;
   display: flex;
   flex: 1;
@@ -111,7 +111,7 @@ const DishSlideContent = styled.div`
   box-sizing: border-box;
 `;
 
-const DishSlideTitle = styled.h3`
+const ItemSlideTitle = styled.h3`
   font-size: 1.25rem;
   font-weight: 700;
   color: #1f1f1f;
@@ -121,14 +121,14 @@ const DishSlideTitle = styled.h3`
   margin: 0;
 `;
 
-const DishSlideSubtitle = styled.span`
+const ItemSlideSubtitle = styled.span`
   font-size: 1rem;
   font-weight: 400;
   color: #1f1f1f;
   margin-bottom: 8px;
 `;
 
-const DishSlideDescription = styled.p`
+const ItemSlideDescription = styled.p`
   font-size: 1rem;
   font-weight: 400;
   color: #1f1f1f;
@@ -137,14 +137,14 @@ const DishSlideDescription = styled.p`
   box-sizing: border-box;
 `;
 
-const DishSlideLabel = styled.span`
+const ItemSlideLabel = styled.span`
   font-size: .875rem;
   font-weight: 400;
   color: #9f9f9f;
   margin-bottom: 4px;
 `;
 
-const DishSlideOptions = styled.ul`
+const ItemSlideOptions = styled.ul`
   width: 100%;
   display: flex;
   flex-flow: column nowrap;
@@ -152,7 +152,7 @@ const DishSlideOptions = styled.ul`
   margin: 0 0 8px 0;
 `;
 
-const DishSlideOption = styled.li`
+const ItemSlideOption = styled.li`
   width: 100%;
   list-style: none;
   display: inline-flex;
@@ -194,9 +194,9 @@ class Swiper extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      slideIndex: this.props.dishIndex,
+      slideIndex: this.props.itemIndex,
       isSharing: false,
-      activeDish: {}
+      activeItem: {}
     }
   }
 
@@ -208,11 +208,11 @@ class Swiper extends Component {
     const slideIndex = this.state.slideIndex
     console.log(this.state.slideIndex);
     console.log(slideIndex);
-    const dish = this.props.dishes[slideIndex]
-    console.log(dish);
+    const item = this.props.items[slideIndex]
+    console.log(item);
     this.setState({
       isSharing: true,
-      activeDish: dish
+      activeItem: item
     })
   }
 
@@ -232,7 +232,7 @@ class Swiper extends Component {
     const settings = {
       dots: false,
       arrows: false,
-      initialSlide: this.props.dishIndex,
+      initialSlide: this.props.itemIndex,
       infinite: false,
       speed: 500,
       slidesToShow: 1,
@@ -255,49 +255,49 @@ class Swiper extends Component {
             <i className="material-icons" onClick={() => this.slider.slickGoTo(this.state.slideIndex - 1)}>chevron_left</i>
             <strong>{this.state.slideIndex + 1}</strong>
             <i className="material-icons" onClick={e => this.slider.slickGoTo(this.state.slideIndex + 1)}>chevron_right</i>
-            of {this.props.dishes.length}
+            of {this.props.items.length}
           </SwiperStatus>
         </SwiperHeader>
         <SwiperSlick>
           <Slider ref={slider => (this.slider = slider)} {...settings}>
-            {this.props.dishes.map((dish) =>
-              <DishSlideWrapper key={dish.id}>
-                <DishSlide>
-                  <DishSlideImage image={dish.image}/>
-                  <DishSlideContent>
-                    <DishSlideTitle>
-                      {dish.name}
-                      <span>${dish.price}</span>
-                    </DishSlideTitle>
-                    <DishSlideSubtitle>
-                      {dish.section} · {dish.type}
-                    </DishSlideSubtitle>
-                    <DishSlideLabel>
+            {this.props.items.map((item) =>
+              <ItemSlideWrapper key={item.id}>
+                <ItemSlide>
+                  <ItemSlideImage image={item.image}/>
+                  <ItemSlideContent>
+                    <ItemSlideTitle>
+                      {item.name}
+                      <span>${item.price}</span>
+                    </ItemSlideTitle>
+                    <ItemSlideSubtitle>
+                      {item.section} · {item.type}
+                    </ItemSlideSubtitle>
+                    <ItemSlideLabel>
                       Description
-                    </DishSlideLabel>
-                    <DishSlideDescription>
-                      {dish.description}
-                    </DishSlideDescription>
-                    {dish.options &&
+                    </ItemSlideLabel>
+                    <ItemSlideDescription>
+                      {item.description}
+                    </ItemSlideDescription>
+                    {item.options &&
                       <React.Fragment>
-                        <DishSlideLabel>
+                        <ItemSlideLabel>
                           Options
-                        </DishSlideLabel>
-                        <DishSlideOptions>
-                          {dish.options.map((option, i) =>
-                            <DishSlideOption key={i}>
+                        </ItemSlideLabel>
+                        <ItemSlideOptions>
+                          {item.options.map((option, i) =>
+                            <ItemSlideOption key={i}>
                               {option.name}
                               <strong>
                                 ${option.price}
                               </strong>
-                            </DishSlideOption>
+                            </ItemSlideOption>
                           )}
-                        </DishSlideOptions>
+                        </ItemSlideOptions>
                       </React.Fragment>
                     }
-                  </DishSlideContent>
-                </DishSlide>
-              </DishSlideWrapper>
+                  </ItemSlideContent>
+                </ItemSlide>
+              </ItemSlideWrapper>
             )}
           </Slider>
         </SwiperSlick>
@@ -306,7 +306,7 @@ class Swiper extends Component {
             <StyledSharerContainer key="0">
               <Sharer
                 onShare={(medium) => this.hasShared(medium)}
-                dish={this.state.activeDish}
+                item={this.state.activeItem}
                 restaurant={this.props.restaurant}/>
             </StyledSharerContainer>
           }

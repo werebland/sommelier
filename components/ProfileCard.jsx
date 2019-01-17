@@ -17,7 +17,7 @@ const ProfileCardWrapper = styled.div`
   position: absolute;
   left: 20px;
   top: 95px;
-  z-index: 88;
+  z-index: 87;
   overflow: hidden;
 `;
 
@@ -122,14 +122,14 @@ const ProfileCardSection = styled.span`
   }
 `;
 
-const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect, toggleSearch, toggleFilter}) => (
+const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect, toggleSearch, toggleFilter, handleSetActive}) => (
   <ProfileCardWrapper>
     <ProfileCardUpper>
         <ProfileCardTitle>
           {restaurant.name}
         </ProfileCardTitle>
         <ProfileCardSubtitle>
-          {restaurant.cuisine} · {restaurant.price} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`} target="blank">{restaurant.address.street}</a>
+          {restaurant.cuisine} · {restaurant.price} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`} target="blank">{restaurant.address.street}.</a>
         </ProfileCardSubtitle>
         <div>
           <ProfileCardButton
@@ -138,12 +138,15 @@ const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect, 
           >
             {_.upperFirst(restaurant.action)}
           </ProfileCardButton>
-          <ProfileCardButton
-            target="blank"
-            href={restaurant.action === "call" ? `tel: ${restaurant.phone}` : restaurant[restaurant.action]}
-          >
-            Reserve
-          </ProfileCardButton>
+          {restaurant.reserve &&
+            <ProfileCardButton
+              target="blank"
+              href={restaurant.reserve}
+            >
+              Reserve
+            </ProfileCardButton>
+          }
+
         </div>
     </ProfileCardUpper>
     <ProfileCardLower>
@@ -158,8 +161,19 @@ const ProfileCard = ({restaurant, sections, activeSection, handleSectionSelect, 
       {sections &&
         <ProfileCardSections>
           {sections.map((section) =>
-            <ProfileCardSection key={section} onClick={() => handleSectionSelect(section)} active={activeSection === section}>
-              <Link activeClass="active" to={section} spy={true} smooth={true} offset={0} duration={500}>{section}</Link>
+            <ProfileCardSection key={section}  active={activeSection === section}>
+              <Link
+                activeClass="active"
+                onClick={() => handleSectionSelect(section)}
+                to={section}
+                spy={true}
+                smooth={true}
+                offset={-12}
+                duration={500}
+                onSetActive={() => handleSetActive(section)}
+              >
+                  {section}
+                </Link>
             </ProfileCardSection>
           )}
           <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>

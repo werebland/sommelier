@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import posed, { PoseGroup } from 'react-pose'
 import ellipsize from 'ellipsize'
 
-const PosedDishesListContainer = posed.div({
+const PosedItemsListContainer = posed.div({
   enter: {
     opacity: 1,
     y: 0,
@@ -14,7 +14,7 @@ const PosedDishesListContainer = posed.div({
   }
 })
 
-const DishesListContainer = styled(PosedDishesListContainer)`
+const ItemsListContainer = styled(PosedItemsListContainer)`
   width: 100%;
   height: 100%;
   display: flex;
@@ -26,7 +26,7 @@ const DishesListContainer = styled(PosedDishesListContainer)`
   z-index: 8;
 `;
 
-const PosedDishCardContainer = posed.article({
+const PosedItemCardContainer = posed.article({
   enter: {
     opacity: 1,
     y: 0,
@@ -41,7 +41,7 @@ const PosedDishCardContainer = posed.article({
   }
 })
 
-const DishCardContainer = styled(PosedDishCardContainer)`
+const ItemCardContainer = styled(PosedItemCardContainer)`
   width: 100%;
   height: 72px;
   display: flex;
@@ -49,13 +49,17 @@ const DishCardContainer = styled(PosedDishCardContainer)`
   padding: 8px 0;
   border-bottom: 1px solid #f0f0f0;
 
+  &:first-of-type {
+    padding: 0 0 8px;
+  }
+
   &:last-of-type {
     border-bottom: none;
     padding: 8px 0 0;
   }
 `;
 
-const DishCardImage = styled.div`
+const ItemCardImage = styled.div`
   width: 72px;
   height: 72px;
   display: inline-flex;
@@ -67,14 +71,14 @@ const DishCardImage = styled.div`
   margin-right: 8px;
 `;
 
-const DishCardContent = styled.div`
+const ItemCardContent = styled.div`
   height: 72px;
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
 `;
 
-const DishCardTitle = styled.h3`
+const ItemCardTitle = styled.h3`
   font-size: 1rem;
   font-weight: 700;
   color: #1f1f1f;
@@ -88,14 +92,14 @@ const DishCardTitle = styled.h3`
   }
 `;
 
-const DishCardSubtitle = styled.h5`
+const ItemCardSubtitle = styled.h5`
   font-size: .875rem;
   font-weight: 400;
   color: #9f9f9f;
   margin: 0 0 4px 0;
 `;
 
-const DishCardDescription = styled.p`
+const ItemCardDescription = styled.p`
   font-size: .875rem;
   font-weight: 400;
   color: #9f9f9f;
@@ -103,37 +107,37 @@ const DishCardDescription = styled.p`
   padding: 0;
 `;
 
-const DishCard = ({ dish, onDishClick }) => (
-  <DishCardContainer onClick={() => onDishClick(dish.id)}>
-    {dish.image !== "" &&
-      <DishCardImage image={dish.image}/>
+const ItemCard = ({ item, onItemClick }) => (
+  <ItemCardContainer onClick={() => onItemClick(item.id)}>
+    {item.image !== "" &&
+      <ItemCardImage image={item.image}/>
     }
-    <DishCardContent>
-      <DishCardTitle>
-        {dish.name}
+    <ItemCardContent>
+      <ItemCardTitle>
+        {item.name}
         <span>
-          ${dish.price.toFixed(2)}
+          ${item.price.toFixed(2)}
         </span>
-      </DishCardTitle>
-      <DishCardSubtitle>
-        {dish.section} · {dish.type}
-      </DishCardSubtitle>
-      <DishCardDescription>
-        {dish.image === "" ? ellipsize(dish.description, 85) : dish.name.length > 21 ? ellipsize(dish.description, 30) : ellipsize(dish.description, 60)}
-      </DishCardDescription>
-    </DishCardContent>
-  </DishCardContainer>
+      </ItemCardTitle>
+      <ItemCardSubtitle>
+        {item.section} · {item.type}
+      </ItemCardSubtitle>
+      <ItemCardDescription>
+        {item.image === "" ? ellipsize(item.description, 85) : item.name.length > 21 ? ellipsize(item.description, 30) : ellipsize(item.description, 60)}
+      </ItemCardDescription>
+    </ItemCardContent>
+  </ItemCardContainer>
 );
 
-const DishesList = ({ dishes, onDishClick }) => (
+const ItemsList = ({ items, onItemClick }) => (
   <PoseGroup>
-    <DishesListContainer key="1">
-        {dishes.map((dish) => (
-          <DishCard dish={dish} key={dish.id} onDishClick={(id) => onDishClick(id)}/>
+    <ItemsListContainer key="1">
+        {items.map((item) => (
+          <ItemCard item={item} key={item.id} onItemClick={(id) => onItemClick(id)}/>
         ))}
-    </DishesListContainer>
+    </ItemsListContainer>
   </PoseGroup>
 
 );
 
-export default DishesList;
+export default ItemsList;

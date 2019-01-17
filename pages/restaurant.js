@@ -11,10 +11,11 @@ import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } 
 
 import Profile from '../components/Profile'
 import ProfileCard from '../components/ProfileCard'
-import DishCard from '../components/DishCard'
 import Swiper from '../components/Swiper'
 import Filter from '../components/Filter'
-import DishesList from '../components/DishesList'
+import ItemsList from '../components/ItemsList'
+import Menu from '../components/Menu'
+import MenuPicker from '../components/MenuPicker'
 
 const RestaurantWrapper = styled.div`
   width: 100%;
@@ -48,10 +49,11 @@ const ActionButton = styled.a`
 const Scroller = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 200px);
   margin-top: 200px;
   background: transparent;
   padding: 40px 0 20px;
+  box-sizing: border-box;
 
   & .sticky-events--sentinel {
       left: 0;
@@ -63,68 +65,6 @@ const Scroller = styled.div`
   & .sticky-events--sentinel-top {
       position: relative;
   }
-`;
-
-const DishCards = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-flow: column nowrap;
-  padding: 20px;
-  box-sizing: border-box;
-`;
-
-const DishCardsFilters = styled.ul`
-  width: 100%;
-  max-width: 100vw;
-  overflow: scroll;
-  padding: 0 16px 0 16px;
-  box-sizing: border-box;
-  margin: 0 0 16px 0;
-  display: flex;
-  flex-flow: row nowrap;
-  position: relative;
-  z-index: 4;
-`;
-
-const DishCardsFilter = styled.li`
-  list-style: none;
-  margin-right: 8px;
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: ${props => props.active ? '#0f0f0f' : '#9f9f9f'};
-  cursor: pointer;
-  white-space: pre;
-`;
-
-const DishCardContainer = posed.div({
-
-})
-
-const PosedDishCard = posed.article({
-  pressable: true,
-  enter: {
-    opacity: 1,
-  },
-  exit: {
-    opacity: 0,
-  },
-  init: {
-    scale: 1,
-    boxShadow: '0px 2px 16px -2px rgba(0,0,0,0.32)',
-  },
-  press: {
-    scale: 0.99,
-    boxShadow: '0px 2px 8px -2px rgba(0,0,0,0.32)',
-  },
-})
-
-const StyledPosedDishCard = styled(PosedDishCard)`
-  margin-bottom: 16px;
-  scale: 1;
-  transform-origin: center !important;
-  border-radius: 8px;
-  background: transparent;
 `;
 
 const SwiperContainer = posed.div({
@@ -307,27 +247,27 @@ class Restaurant extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeDish: "",
+      activeItem: "",
       activeSection: '',
-      sections: [],
-      dishes: [],
-      filteredDishes: [],
-      groupedDishes: {},
+      items: [],
+      filteredItems: [],
+      groupedItems: {},
       isSearching: false,
-      sectionDishes: [],
+      sectionItems: [],
       isFiltering: false,
       isLoading: true,
       isChangingFilter: false,
       overlayVisible: false,
       term: '',
-      currentDishes: [],
+      currentItems: [],
       filters: {
         section: '',
         sortBy: '',
         priceMin: '',
         priceMax: '',
         tags: [],
-      }
+      },
+      menu: {},
     };
   }
 
@@ -354,8 +294,13 @@ class Restaurant extends Component {
   componentDidMount() {
     if (Object.keys(this.props.restaurant).length > 0) {
       console.log(this.props.restaurant);
-      this.fetchDishes()
+      this.fetchItems()
       let date = moment().format('YYYYMMDD')
+      if (this.props.restaurant.menus.length == 1) {
+        this.setState({
+          menu: this.props.restaurant.menus[0]
+        })
+      }
       // let views = this.props.restaurant.views
       // if (_.has(views, date)) {
       //   // Has views, increment view by 1
@@ -374,9 +319,18 @@ class Restaurant extends Component {
       //   console.log(err);
       // });
     }
+    Events.scrollEvent.register('begin', function(to, element) {
+      console.log("begin", arguments);
+    });
+    scrollSpy.update();
   }
 
-  fetchDishes() {
+  componentWillUnmount() {
+    Events.scrollEvent.remove('begin');
+    Events.scrollEvent.remove('end');
+  }
+
+  fetchItems() {
     let restaurantId = this.props.restaurant.id
     base.get('items', {
       context: this,
@@ -384,48 +338,46 @@ class Restaurant extends Component {
       withRefs: true,
       query: (ref) => ref.where('restaurantId', '==', restaurantId),
     }).then(data => {
-      this.processDishes(data)
+      this.processItems(data)
     }).catch(err => {
       console.log(err);
     })
   }
 
-  processDishes(dishes) {
+  processItems(items) {
     let sections = []
-    _.each(dishes, function(dish) {
-      let section = dish.section
+    _.each(items, function(item) {
+      let section = item.section
       sections.push(section)
     })
-    if (sections.length === dishes.length) {
+    if (sections.length === items.length) {
       const uniqueSections = _.uniq(sections)
-      const groupedDishes = _.groupBy(dishes, 'section')
+      const groupedItems = _.groupBy(items, 'section')
       this.setState({
-        sections: uniqueSections,
-        activeSection: uniqueSections[0],
-        groupedDishes: groupedDishes,
-        dishes: dishes,
-        sectionDishes: dishes,
+        groupedItems,
+        items,
         isLoading: false,
       })
     }
   }
 
-  handleDishView(id, result) {
+  handleItemView(id, result) {
+    let item = _.find(this.state.items, { id: id })
     if (result) {
       console.log(result);
       this.setState({
-        activeDish: id,
+        activeItem: id,
         results: result,
         overlayVisible: true, })
     } else {
       this.setState({
-        activeDish: id,
+        activeItem: id,
+        activeSection: item.section,
         overlayVisible: true,
       })
     }
-    let dish = _.find(this.state.dishes, { id: id })
     let date = moment().format('YYYYMMDD')
-    let views = dish.views
+    let views = item.views
     console.log(views);
     if (views) {
       console.log('Views exist');
@@ -454,102 +406,24 @@ class Restaurant extends Component {
     });
   }
 
-  handleSort(selectedSort) {
-    const dishes = this.state.dishes
-    const section = this.state.activeSection
-    console.log(section);
-    let sortedDishes = []
-    console.log(selectedSort);
-    switch (selectedSort) {
-      case "priceAsc":
-        sortedDishes = _.sortBy(dishes, ['price'])
-        console.log(sortedDishes);
-        break;
-      case "priceDsc":
-        sortedDishes = _.sortBy(dishes, ['price'])
-        sortedDishes = _.reverse(sortedDishes)
-        console.log(sortedDishes);
-        break;
-      case "nameAsc":
-        sortedDishes = _.sortBy(dishes, ['name'])
-        console.log(sortedDishes);
-        break;
-      case "nameDsc":
-        sortedDishes = _.sortBy(dishes, ['name'])
-        sortedDishes = _.reverse(sortedDishes)
-        console.log(sortedDishes);
-        break;
-      default:
-    }
-    if (sortedDishes.length > 0 && section !== '') {
-      const groupedDishes = _.groupBy(sortedDishes, 'section')
-      console.log(groupedDishes);
-      this.setState({
-        groupedDishes,
-        sectionDishes: groupedDishes[section],
-      })
-    } else if (sortedDishes.length > 0 && section == '') {
-      const groupedDishes = _.groupBy(sortedDishes, 'section')
-      console.log('section is null');
-      console.log(groupedDishes);
-      this.setState({
-        dishes: sortedDishes,
-        groupedDishes,
-        sectionDishes: sortedDishes,
-      })
-    }
-  }
-
-  handlePrice(minPrice, maxPrice) {
-    const {dishes, sectionDishes, activeSection} = this.state
-    console.log(sectionDishes);
-    if (activeSection === '') {
-      const pricedDishes = _.filter(dishes, function(o) { return minPrice < o.price && o.price < maxPrice });
-      console.log(pricedDishes);
-      const groupedDishes = _.groupBy(pricedDishes, 'section')
-      this.setState({
-        groupedDishes,
-        sectionDishes: pricedDishes,
-      })
-      console.log(pricedDishes);
-    } else {
-      console.log('active section');
-      const pricedDishes = _.filter(dishes, function(o) { return minPrice < o.price && o.price < maxPrice });
-      const groupedDishes = _.groupBy(pricedDishes, 'section')
-      const sectionDishes = groupedDishes[activeSection]
-      console.log(pricedDishes);
-      this.setState({
-        groupedDishes,
-        sectionDishes,
-      })
-    }
-  }
-
-  handleTags(tags) {
-
-  }
-
-  filterDishes(type, value) {
-    let { dishes, groupedDishes, filteredDishes } = this.state
-    if (filteredDishes.length !== dishes.length) {
-      switch (type) {
-        case 'section':
-          if (value === '') {
-            filteredDishes = dishes
-            this.setState({ filteredDishes })
-          } else {
-            filteredDishes = groupedDishes[value]
-            this.setState({ filteredDishes })
-          }
-          break;
-        case 'sort':
-
+  handleSort(sortBy) {
+    const {groupedItems} = this.state
+    let sortedGroupedItems = []
+    console.log(_.sortBy(groupedItems, ['name']))
+    _.forEach(groupedItems, function(value) {
+      console.log(value)
+      console.log(sortBy);
+      switch (sortBy) {
+        case 'nameAsc':
+          let groupedItem = _.sortBy(value, ['name'])
+          console.log(groupedItem);
+          sortedGroupedItems.push(groupedItem)
           break;
         default:
+          return
       }
-    } else {
-
-    }
+    })
+    console.log(_.groupBy(sortedGroupedItems, 'section'));
   }
 
   render() {
@@ -580,7 +454,7 @@ class Restaurant extends Component {
     ]
     };
 
-    var fuse = new Fuse(this.state.sectionDishes, options); // "list" is the item array
+    var fuse = new Fuse(this.state.items, options); // "list" is the item array
 
     var results = fuse.search(this.state.term);
 
@@ -601,9 +475,10 @@ class Restaurant extends Component {
         />
         <ProfileCard
           restaurant={this.props.restaurant}
-          sections={this.state.sections}
+          sections={this.state.menu.sections}
           activeSection={this.state.activeSection}
-          handleSectionSelect={(section) => section === "" ? this.setState({ activeSection: section, sectionDishes: this.state.dishes }) : this.setState({ activeSection: section, sectionDishes: this.state.groupedDishes[section] })}
+          handleSetActive={(section) => this.setState({ activeSection: section })}
+          handleSectionSelect={(section) => this.setState({ activeSection: section, sectionItems: this.state.groupedItems[section] })}
           toggleSearch={() => this.setState({
             isSearching: !this.state.isSearching,
             isFiltering: false,
@@ -618,7 +493,7 @@ class Restaurant extends Component {
               <SearchContainer key='0'>
                 <SearchInput
                   type="search"
-                  placeholder={`Search ${this.state.sectionDishes.length} dishes`}
+                  placeholder={`Search ${this.state.items.length} items`}
                   autoFocus
                   value={this.state.term}
                   onChange={(e) => this.setState({ term: e.target.value})}/>
@@ -628,12 +503,12 @@ class Restaurant extends Component {
           <PoseGroup preEnterPose="preEnter">
             {this.state.isFiltering &&
               <SearchContainer key="1">
-                <Filter />
+                <Filter handleSort={(sortBy) => this.handleSort(sortBy)}/>
               </SearchContainer>
             }
           </PoseGroup>
           <PoseGroup>
-            {this.state.isLoading && this.state.groupedDishes
+            {this.state.isLoading && this.state.groupedItems
               ?
                 <Loading key="0">
                   <span style={{ margin: 'auto'}}> Loading </span>
@@ -642,16 +517,18 @@ class Restaurant extends Component {
                 <Test key="1">
                   {this.state.isSearching && this.state.term !== ''
                     ?
-                    <DishesList dishes={results} onDishClick={(id) => this.handleDishView(id)}/>
+                    <ItemsList items={results} onItemClick={(id) => this.handleItemView(id)}/>
                     :
-                    <React.Fragment>
-                      {this.state.sections && this.state.sections.map((section) => (
-                        <Section name={section} key={section}>
-                          <SectionTitle>{section}</SectionTitle>
-                          <DishesList dishes={this.state.groupedDishes[section]} onDishClick={(id) => this.handleDishView(id)} />
-                        </Section>
-                      ))}
-                    </React.Fragment>
+                    <PoseGroup preEnterPose="preEnter">
+                      <Test key="2">
+                        {Object.keys(this.state.menu).length == 0
+                          ?
+                          <MenuPicker menus={this.props.restaurant.menus} handleMenuSelect={(menu) => this.setState({ menu })}/>
+                          :
+                          <Menu sections={this.state.menu.sections} items={this.state.items} onItemClick={(id) => this.handleItemView(id)}/>
+                        }
+                      </Test>
+                    </PoseGroup>
                   }
                 </Test>
             }
@@ -659,16 +536,16 @@ class Restaurant extends Component {
         </Scroller>
         <div style={{position: 'fixed', top: '0', zIndex: '888'}}>
           <PoseGroup>
-            {this.state.activeDish !== "" &&
+            {this.state.activeItem !== "" &&
               <StyledSwiperContainer key="0">
                 <Swiper
-                  dish={this.state.activeDish}
+                  item={this.state.activeItem}
                   restaurant={this.props.restaurant}
-                  dishes={this.state.sectionDishes}
-                  dishIndex={_.findIndex(this.state.sectionDishes, { id: this.state.activeDish })}
+                  items={this.state.groupedItems[this.state.activeSection]}
+                  itemIndex={_.findIndex(this.state.groupedItems[this.state.activeSection], { id: this.state.activeItem })}
                   title={this.state.activeSection}
-                  isVisible={this.state.activeDish !== ""}
-                  handleCollapse={() => this.setState({ activeDish: "", overlayVisible: false })}/>
+                  isVisible={this.state.activeItem !== ""}
+                  handleCollapse={() => this.setState({ activeItem: "", overlayVisible: false })}/>
               </StyledSwiperContainer>
             }
           </PoseGroup>

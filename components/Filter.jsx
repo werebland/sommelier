@@ -35,9 +35,9 @@ const FilterOption = styled.div`
   color: ${props => props.active ? '#1f1f1f' : '#9f9f9f'};
 `;
 
-const Filter = ({}) => (
+const Filter = ({handleSort}) => (
   <FilterContainer>
-    <FilterOption>
+    <FilterOption onClick={() => handleSort('nameAsc')}>
       Sort (A to Z)
     </FilterOption>
     <FilterOption>
