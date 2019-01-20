@@ -4,7 +4,6 @@ import _ from 'lodash'
 import { Link } from 'react-scroll'
 import posed, {PoseGroup} from 'react-pose'
 import Select from 'react-select'
-import Sticky from 'react-stickynode'
 
 const ProfileCardWrapper = styled.div`
   width: calc(100vw - 40px);
