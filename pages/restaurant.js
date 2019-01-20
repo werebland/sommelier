@@ -8,6 +8,8 @@ import firestore from 'firebase/firestore'
 import moment from 'moment'
 import Fuse from 'fuse.js'
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import Select from 'react-select'
+import NoSSR from 'react-no-ssr';
 
 import Profile from '../components/Profile'
 import ProfileCard from '../components/ProfileCard'
@@ -15,7 +17,6 @@ import Swiper from '../components/Swiper'
 import Filter from '../components/Filter'
 import ItemsList from '../components/ItemsList'
 import Menu from '../components/Menu'
-import MenuPicker from '../components/MenuPicker'
 
 const RestaurantWrapper = styled.div`
   width: 100%;
@@ -242,13 +243,58 @@ const SectionTitle = styled.h3`
   box-sizing: border-box;
 `;
 
+const MenuSelectContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 12px;
+
+  & .menuSelect__menu {
+    z-index: 88;
+  }
+
+  & .menuSelect__value-container {
+    width: ${props => props.width}px;
+    min-width: 60px;
+  }
+
+  & .menuSelect__control {
+    border: 0;
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+    border-radius: 0;
+  }
+
+  & .menuSelect__control.menuSelect__control--is-focused {
+    border: 0;
+    border-bottom: 1px solid #1f1f1f;
+    border-color: #1f1f1f;
+    box-shadow: none;
+  }
+
+  & .menuSelect__control.menuSelect__control--is-focused:hover {
+    border: 0;
+    border-bottom: 1px solid #1f1f1f;
+    border-color: #1f1f1f;
+  }
+
+  & .menuSelect__single-value {
+    font-weight: 700;
+    color: #1f1f1f;
+  }
+
+  & .menuSelect__option--active {
+    background-color: #1f1f1f;
+  }
+`;
+
 class Restaurant extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       activeItem: "",
-      activeSection: '',
+      activeSection: this.props.restaurant.menus[0].sections[0],
       items: [],
       filteredItems: [],
       groupedItems: {},
@@ -267,7 +313,8 @@ class Restaurant extends Component {
         priceMax: '',
         tags: [],
       },
-      menu: {},
+      menu: this.props.restaurant.menus[0],
+      isSticky: false,
     };
   }
 
@@ -323,11 +370,30 @@ class Restaurant extends Component {
       console.log("begin", arguments);
     });
     scrollSpy.update();
+    const debouncedScroll = _.debounce(() => this.handleScroll(), 150)
+    window.addEventListener('scroll', () => this.handleScroll());
+
   }
 
   componentWillUnmount() {
     Events.scrollEvent.remove('begin');
     Events.scrollEvent.remove('end');
+    window.removeEventListener('scroll', this.handleScroll());
+  }
+
+  handleScroll() {
+    const scrollDistance = window.scrollY
+    if (!this.state.isSticky && scrollDistance >= 200) {
+      this.setState({
+        isSticky: true
+      })
+    } else if (this.state.isSticky && scrollDistance < 200) {
+      this.setState({
+        isSticky: false
+      });
+    } else {
+      return
+    }
   }
 
   fetchItems() {
@@ -458,6 +524,12 @@ class Restaurant extends Component {
 
     var results = fuse.search(this.state.term);
 
+    let menuOptions = []
+
+    this.props.restaurant.menus.map((menu) => (
+      menuOptions.push({ value: menu, label: menu.name })
+    ))
+
     return (
       <RestaurantWrapper>
         <Head>
@@ -479,34 +551,28 @@ class Restaurant extends Component {
           activeSection={this.state.activeSection}
           handleSetActive={(section) => this.setState({ activeSection: section })}
           handleSectionSelect={(section) => this.setState({ activeSection: section, sectionItems: this.state.groupedItems[section] })}
-          toggleSearch={() => this.setState({
-            isSearching: !this.state.isSearching,
-            isFiltering: false,
-          })}
-          toggleFilter={() => this.setState({
-            isFiltering: !this.state.isFiltering,
-            isSearching: false,
-          })}/>
+          isSearching={this.state.isSearching}
+          toggleSearching={() => this.setState({isSearching: !this.state.isSearching, isFiltering: false})}
+          isFiltering={this.state.isFiltering}
+          toggleFiltering={() => this.setState({isFiltering: !this.state.isFiltering, isSearching: false})}
+          handleSearch={(value) => this.setState({ term: value })}
+          isSticky={this.state.isSticky}
+        />
         <Scroller>
-          <PoseGroup preEnterPose="preEnter">
-            {this.state.isSearching &&
-              <SearchContainer key='0'>
-                <SearchInput
-                  type="search"
-                  placeholder={`Search ${this.state.items.length} items`}
-                  autoFocus
-                  value={this.state.term}
-                  onChange={(e) => this.setState({ term: e.target.value})}/>
-              </SearchContainer>
+          <NoSSR>
+            {this.props.restaurant.menus.length > 1 &&
+              <MenuSelectContainer width={(8*this.state.menu.name.length) + 48}>
+                <Select
+                  className="menuSelect__Container"
+                  classNamePrefix="menuSelect"
+                  options={menuOptions}
+                  isClearable={false}
+                  isSearchable={false}
+                  onChange={(option) => this.setState({menu: option.value})}
+                  value={menuOptions.filter(({value}) => value === this.state.menu)} />
+              </MenuSelectContainer>
             }
-          </PoseGroup>
-          <PoseGroup preEnterPose="preEnter">
-            {this.state.isFiltering &&
-              <SearchContainer key="1">
-                <Filter handleSort={(sortBy) => this.handleSort(sortBy)}/>
-              </SearchContainer>
-            }
-          </PoseGroup>
+          </NoSSR>
           <PoseGroup>
             {this.state.isLoading && this.state.groupedItems
               ?
@@ -519,16 +585,7 @@ class Restaurant extends Component {
                     ?
                     <ItemsList items={results} onItemClick={(id) => this.handleItemView(id)}/>
                     :
-                    <PoseGroup preEnterPose="preEnter">
-                      <Test key="2">
-                        {Object.keys(this.state.menu).length == 0
-                          ?
-                          <MenuPicker menus={this.props.restaurant.menus} handleMenuSelect={(menu) => this.setState({ menu })}/>
-                          :
-                          <Menu sections={this.state.menu.sections} items={this.state.items} onItemClick={(id) => this.handleItemView(id)}/>
-                        }
-                      </Test>
-                    </PoseGroup>
+                    <Menu sections={this.state.menu.sections} items={this.state.items} onItemClick={(id) => this.handleItemView(id)}/>
                   }
                 </Test>
             }

@@ -22,7 +22,7 @@ const PosedMenuContainer = posed.article({
 })
 
 const MenuContainer = styled(PosedMenuContainer)`
-  padding-top: 20px;
+  padding-top: 12px;
 `;
 
 const Section = styled(Element)`
