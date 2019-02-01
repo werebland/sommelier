@@ -45,7 +45,7 @@ const Menu = ({items, sections, onItemClick}) => (
         <SectionHeader>
           {section}
         </SectionHeader>
-        <ItemsList items={_.filter(items, ['section', section])} onItemClick={(id) => onItemClick(id)}/>
+        <ItemsList items={section === 'Results' ? items : _.filter(items, ['section', section])} onItemClick={(id) => onItemClick(id)}/>
       </Section>
     )}
   </MenuContainer>

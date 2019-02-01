@@ -1,35 +1,19 @@
 {
-  "devFiles": [],
+  "devFiles": [
+    "static/development/dll/dll_0e3eb5c69b6a34d51849.js"
+  ],
   "pages": {
     "/_app": [
-      "static/runtime/webpack-42652fa8b82c329c0559.js",
-      "static/chunks/commons.99c16bd387cf66712893.js",
-      "static/runtime/main-1e4e659b1b28680b6047.js"
-    ],
-    "/index": [
-      "static/runtime/webpack-42652fa8b82c329c0559.js",
-      "static/chunks/commons.99c16bd387cf66712893.js",
-      "static/runtime/main-1e4e659b1b28680b6047.js"
-    ],
-    "/item": [
-      "static/runtime/webpack-42652fa8b82c329c0559.js",
-      "static/chunks/commons.99c16bd387cf66712893.js",
-      "static/runtime/main-1e4e659b1b28680b6047.js"
-    ],
-    "/restaurant": [
-      "static/runtime/webpack-42652fa8b82c329c0559.js",
-      "static/chunks/commons.99c16bd387cf66712893.js",
-      "static/runtime/main-1e4e659b1b28680b6047.js"
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
     ],
     "/_error": [
-      "static/runtime/webpack-42652fa8b82c329c0559.js",
-      "static/chunks/commons.99c16bd387cf66712893.js",
-      "static/runtime/main-1e4e659b1b28680b6047.js"
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
     ],
-    "/": [
-      "static/runtime/webpack-42652fa8b82c329c0559.js",
-      "static/chunks/commons.99c16bd387cf66712893.js",
-      "static/runtime/main-1e4e659b1b28680b6047.js"
+    "/restaurant": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
     ]
   }
 }

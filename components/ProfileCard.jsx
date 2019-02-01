@@ -159,6 +159,15 @@ const ProfileCardSearchInput = styled.input`
   border-bottom: 1px solid hsl(0,0%,80%);
   outline: 0;
   box-shadow: none;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #1f1f1f;
+
+  &::placeholder {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #9f9f9f;
+  }
 
   &:focus, &:hover, &:active {
     border-color: #1f1f1f;
@@ -283,6 +292,14 @@ const ProfileCard = ({
             Reserve
           </ProfileCardButton>
         }
+        {restaurant.order &&
+          <ProfileCardButton
+            target="blank"
+            href={restaurant.order}
+          >
+            Order
+          </ProfileCardButton>
+        }
       </div>
     </ProfileCardUpper>
     <ProfileCardLower>
@@ -306,33 +323,36 @@ const ProfileCard = ({
       </ProfileCardIcons>
       {!isSearching && !isFiltering
         ?
-        <ProfileCardSections>
-          <PoseGroup key="1" preEnterPose='preEnter'>
-            {sections.map((section) =>
-              <ProfileCardSection key={section}  active={activeSection === section}>
-                <Link
-                  activeClass="active"
-                  onClick={() => handleSectionSelect(section)}
-                  to={section}
-                  spy={true}
-                  smooth={true}
-                  offset={-12}
-                  duration={500}
-                  onSetActive={() => handleSetActive(section)}
-                >
-                    {section}
-                  </Link>
-              </ProfileCardSection>
-            )}
-          </PoseGroup>
-          <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
-          </div>
-        </ProfileCardSections>
+        <div style={{ overflow: 'hidden' }}>
+          <ProfileCardSections>
+            <PoseGroup key="1" preEnterPose='preEnter'>
+              {sections.map((section) =>
+                <ProfileCardSection key={section}  active={activeSection === section}>
+                  <Link
+                    activeClass="active"
+                    onClick={() => handleSectionSelect(section)}
+                    to={section}
+                    spy={true}
+                    smooth={true}
+                    offset={-52}
+                    duration={500}
+                    onSetActive={() => handleSetActive(section)}
+                  >
+                      {section}
+                    </Link>
+                </ProfileCardSection>
+              )}
+            </PoseGroup>
+            <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
+            </div>
+          </ProfileCardSections>
+        </div>
+
         :
         <Fragment>
           {isSearching &&
             <ProfileCardSearchContainer>
-              <ProfileCardSearchInput type="search" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
+              <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
             </ProfileCardSearchContainer>
           }
           {isFiltering &&

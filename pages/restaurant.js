@@ -366,9 +366,9 @@ class Restaurant extends Component {
       //   console.log(err);
       // });
     }
-    Events.scrollEvent.register('begin', function(to, element) {
-      console.log("begin", arguments);
-    });
+    // Events.scrollEvent.register('begin', function(to, element) {
+    //   console.log("begin", arguments);
+    // });
     scrollSpy.update();
     const debouncedScroll = _.debounce(() => this.handleScroll(), 150)
     window.addEventListener('scroll', () => this.handleScroll());
@@ -516,7 +516,7 @@ class Restaurant extends Component {
       keys: [
         "name",
         "type",
-        "family",
+        "section",
     ]
     };
 
@@ -583,7 +583,7 @@ class Restaurant extends Component {
                 <Test key="1">
                   {this.state.isSearching && this.state.term !== ''
                     ?
-                    <ItemsList items={results} onItemClick={(id) => this.handleItemView(id)}/>
+                    <Menu sections={['Results']} items={results} onItemClick={(id) => this.handleItemView(id)}/>
                     :
                     <Menu sections={this.state.menu.sections} items={this.state.items} onItemClick={(id) => this.handleItemView(id)}/>
                   }
@@ -598,9 +598,9 @@ class Restaurant extends Component {
                 <Swiper
                   item={this.state.activeItem}
                   restaurant={this.props.restaurant}
-                  items={this.state.groupedItems[this.state.activeSection]}
-                  itemIndex={_.findIndex(this.state.groupedItems[this.state.activeSection], { id: this.state.activeItem })}
-                  title={this.state.activeSection}
+                  items={this.state.isSearching ? results : this.state.groupedItems[this.state.activeSection]}
+                  itemIndex={this.state.isSearching ? _.findIndex(results, { id: this.state.activeItem }) : _.findIndex(this.state.groupedItems[this.state.activeSection], { id: this.state.activeItem })}
+                  title={this.state.isSearching ? 'Results' : this.state.activeSection}
                   isVisible={this.state.activeItem !== ""}
                   handleCollapse={() => this.setState({ activeItem: "", overlayVisible: false })}/>
               </StyledSwiperContainer>

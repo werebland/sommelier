@@ -57,6 +57,10 @@ const ItemCardContainer = styled(PosedItemCardContainer)`
     border-bottom: none;
     padding: 8px 0 0;
   }
+
+  &:only-of-type {
+    padding: 0;
+  }
 `;
 
 const ItemCardImage = styled.div`
@@ -123,7 +127,16 @@ const ItemCard = ({ item, onItemClick }) => (
         {item.section} · {item.type}
       </ItemCardSubtitle>
       <ItemCardDescription>
-        {item.image === "" ? ellipsize(item.description, 85) : item.name.length > 21 ? ellipsize(item.description, 30) : ellipsize(item.description, 60)}
+        {item.image === "" &&
+          <React.Fragment>
+            {item.name.length > 30 ? ellipsize(item.description, 45) : ellipsize(item.description, 85)}
+          </React.Fragment>
+        }
+        {item.image !== "" &&
+          <React.Fragment>
+            {item.name.length > 21 ? ellipsize(item.description, 30) : ellipsize(item.description, 60)}
+          </React.Fragment>
+        }
       </ItemCardDescription>
     </ItemCardContent>
   </ItemCardContainer>
