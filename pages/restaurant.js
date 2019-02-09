@@ -316,6 +316,7 @@ class Restaurant extends Component {
       menu: this.props.restaurant.menus[0],
       isSticky: false,
     };
+    this.profileCardRef = React.createRef()
   }
 
   static async getInitialProps({ query }) {
@@ -340,7 +341,6 @@ class Restaurant extends Component {
 
   componentDidMount() {
     if (Object.keys(this.props.restaurant).length > 0) {
-      console.log(this.props.restaurant);
       this.fetchItems()
       let date = moment().format('YYYYMMDD')
       if (this.props.restaurant.menus.length == 1) {
@@ -383,6 +383,7 @@ class Restaurant extends Component {
 
   handleScroll() {
     const scrollDistance = window.scrollY
+    console.log(this.profileCardRef.current)
     if (!this.state.isSticky && scrollDistance >= 200) {
       this.setState({
         isSticky: true
@@ -472,24 +473,32 @@ class Restaurant extends Component {
     });
   }
 
-  handleSort(sortBy) {
-    const {groupedItems} = this.state
-    let sortedGroupedItems = []
-    console.log(_.sortBy(groupedItems, ['name']))
-    _.forEach(groupedItems, function(value) {
-      console.log(value)
-      console.log(sortBy);
-      switch (sortBy) {
-        case 'nameAsc':
-          let groupedItem = _.sortBy(value, ['name'])
-          console.log(groupedItem);
-          sortedGroupedItems.push(groupedItem)
-          break;
-        default:
-          return
-      }
+  handleSort(option) {
+    let {items} = this.state
+    switch (option.value) {
+      case "priceAsc":
+        items = _.sortBy(items, ['price'])
+        break;
+      case "priceDsc":
+        items = _.sortBy(items, ['price']).reverse()
+        break;
+      case "nameAsc":
+        items = _.sortBy(items, ['name'])
+        break;
+      case "nameDsc":
+        items = _.sortBy(items, ['name']).reverse()
+        break;
+      default:
+
+    }
+    this.setState({
+      sortOption: option,
+      items,
     })
-    console.log(_.groupBy(sortedGroupedItems, 'section'));
+  }
+
+  handleTags() {
+
   }
 
   render() {
@@ -545,19 +554,23 @@ class Restaurant extends Component {
         <Profile
           image={this.props.restaurant.image}
         />
-        <ProfileCard
-          restaurant={this.props.restaurant}
-          sections={this.state.menu.sections}
-          activeSection={this.state.activeSection}
-          handleSetActive={(section) => this.setState({ activeSection: section })}
-          handleSectionSelect={(section) => this.setState({ activeSection: section, sectionItems: this.state.groupedItems[section] })}
-          isSearching={this.state.isSearching}
-          toggleSearching={() => this.setState({isSearching: !this.state.isSearching, isFiltering: false})}
-          isFiltering={this.state.isFiltering}
-          toggleFiltering={() => this.setState({isFiltering: !this.state.isFiltering, isSearching: false})}
-          handleSearch={(value) => this.setState({ term: value })}
-          isSticky={this.state.isSticky}
-        />
+        <div ref={this.profileCardRef}>
+          <ProfileCard
+            restaurant={this.props.restaurant}
+            sections={this.state.menu.sections}
+            activeSection={this.state.activeSection}
+            handleSetActive={(section) => this.setState({ activeSection: section })}
+            handleSectionSelect={(section) => this.setState({ activeSection: section, sectionItems: this.state.groupedItems[section] })}
+            isSearching={this.state.isSearching}
+            toggleSearching={() => this.setState({isSearching: !this.state.isSearching, isFiltering: false})}
+            isFiltering={this.state.isFiltering}
+            toggleFiltering={() => this.setState({isFiltering: !this.state.isFiltering, isSearching: false})}
+            handleSearch={(value) => this.setState({ term: value })}
+            isSticky={this.state.isSticky}
+            handleSort={(sortBy) => this.handleSort(sortBy)}
+            sortOption={this.state.sortOption}
+          />
+        </div>
         <Scroller>
           <NoSSR>
             {this.props.restaurant.menus.length > 1 &&

@@ -17,7 +17,7 @@ export default class MyDocument extends Document {
           <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
           {this.props.styleTags}
         </Head>
-        <body style={{ padding: 0, margin: 0, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"', height: '100%'}}>
+        <body style={{ padding: 0, margin: 0, fontFamily: '-apple-system, BlinkMacSystemFont, Helvetica, Roboto, "Segoe UI", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"', height: '100%'}}>
           <Main />
           <NextScript />
         </body>

@@ -266,6 +266,7 @@ const ProfileCard = ({
     handleSort,
     handlePrice,
     handleTags,
+    sortOption,
   }) => (
   <ProfileCardWrapper isSticky={isSticky}>
     <ProfileCardUpper>
@@ -357,7 +358,13 @@ const ProfileCard = ({
           }
           {isFiltering &&
             <ProfileCardFilterContainer width={(8*sortOptions[0].label.length)}>
-              <Select options={sortOptions} classNamePrefix="profileCardFilterSelect"/>
+              <Select
+                options={sortOptions}
+                classNamePrefix="profileCardFilterSelect"
+                placeholder="Sort"
+                onChange={(option) => handleSort(option)}
+                value={sortOption}
+                />
             </ProfileCardFilterContainer>
           }
         </Fragment>
