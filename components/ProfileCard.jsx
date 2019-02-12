@@ -18,7 +18,7 @@ const ProfileCardWrapper = styled.div`
   justify-content: flex-start;
   position: ${props => props.isSticky ? 'fixed' : 'absolute'};
   left: 20px;
-  top: ${props => props.isSticky ? '-105px' : '95px'};
+  top: ${props => props.isSticky ? `-${props.height - 40}px` : `${240 - props.height}px`};
   z-index: 87;
 `;
 
@@ -249,128 +249,132 @@ const sortOptions = [
   },
 ]
 
-const ProfileCard = ({
-    restaurant,
-    isSticky,
-    sections,
-    activeSection,
-    handleSectionSelect,
-    toggleSearch,
-    toggleFilter,
-    handleSetActive,
-    isSearching,
-    toggleSearching,
-    isFiltering,
-    toggleFiltering,
-    handleSearch,
-    handleSort,
-    handlePrice,
-    handleTags,
-    sortOption,
-  }) => (
-  <ProfileCardWrapper isSticky={isSticky}>
-    <ProfileCardUpper>
-      <ProfileCardTitle>
-        {restaurant.name}
-      </ProfileCardTitle>
-      <ProfileCardSubtitle>
-        {restaurant.cuisine} · {restaurant.price} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`} target="blank">{restaurant.address.street}.</a>
-      </ProfileCardSubtitle>
-      <div>
-        {restaurant.phone &&
-          <ProfileCardButton
-            target="blank"
-            href={`tel: ${restaurant.phone}`}
-          >
-            Call
-          </ProfileCardButton>
-        }
-        {restaurant.reserve &&
-          <ProfileCardButton
-            target="blank"
-            href={restaurant.reserve}
-          >
-            Reserve
-          </ProfileCardButton>
-        }
-        {restaurant.order &&
-          <ProfileCardButton
-            target="blank"
-            href={restaurant.order}
-          >
-            Order
-          </ProfileCardButton>
-        }
-      </div>
-    </ProfileCardUpper>
-    <ProfileCardLower>
-      <ProfileCardIcons>
-        <ProfileCardIcon className="material-icons" onClick={() => toggleSearching()}>
-          {isSearching
-            ?
-            'close'
-            :
-            'search'
-          }
-        </ProfileCardIcon>
-        <ProfileCardIcon className="material-icons" onClick={() => toggleFiltering()}>
-          {isFiltering
-            ?
-            'close'
-            :
-            'filter_list'
-          }
-        </ProfileCardIcon>
-      </ProfileCardIcons>
-      {!isSearching && !isFiltering
-        ?
-        <div style={{ overflow: 'hidden' }}>
-          <ProfileCardSections>
-            <PoseGroup key="1" preEnterPose='preEnter'>
-              {sections.map((section) =>
-                <ProfileCardSection key={section}  active={activeSection === section}>
-                  <Link
-                    activeClass="active"
-                    onClick={() => handleSectionSelect(section)}
-                    to={section}
-                    spy={true}
-                    smooth={true}
-                    offset={-52}
-                    duration={500}
-                    onSetActive={() => handleSetActive(section)}
-                  >
-                      {section}
-                    </Link>
-                </ProfileCardSection>
-              )}
-            </PoseGroup>
-            <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
-            </div>
-          </ProfileCardSections>
-        </div>
+const ProfileCard = React.forwardRef((props, ref) => {
 
-        :
-        <Fragment>
-          {isSearching &&
-            <ProfileCardSearchContainer>
-              <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
-            </ProfileCardSearchContainer>
+    const {
+        restaurant,
+        isSticky,
+        sections,
+        activeSection,
+        handleSectionSelect,
+        toggleSearch,
+        toggleFilter,
+        handleSetActive,
+        isSearching,
+        toggleSearching,
+        isFiltering,
+        toggleFiltering,
+        handleSearch,
+        handleSort,
+        handlePrice,
+        handleTags,
+        sortOption,
+        height
+      } = props
+    return (
+    <ProfileCardWrapper isSticky={isSticky} ref={ref} height={height}>
+      <ProfileCardUpper>
+        <ProfileCardTitle>
+          {restaurant.name}
+        </ProfileCardTitle>
+        <ProfileCardSubtitle>
+          {restaurant.cuisine} · {restaurant.price} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`} target="blank">{restaurant.address.street}.</a>
+        </ProfileCardSubtitle>
+        <div>
+          {restaurant.phone &&
+            <ProfileCardButton
+              target="blank"
+              href={`tel: ${restaurant.phone}`}
+            >
+              Call
+            </ProfileCardButton>
           }
-          {isFiltering &&
-            <ProfileCardFilterContainer width={(8*sortOptions[0].label.length)}>
-              <Select
-                options={sortOptions}
-                classNamePrefix="profileCardFilterSelect"
-                placeholder="Sort"
-                onChange={(option) => handleSort(option)}
-                value={sortOption}
-                />
-            </ProfileCardFilterContainer>
+          {restaurant.reserve &&
+            <ProfileCardButton
+              target="blank"
+              href={restaurant.reserve}
+            >
+              Reserve
+            </ProfileCardButton>
           }
-        </Fragment>
-      }
-    </ProfileCardLower>
-  </ProfileCardWrapper>
-);
+          {restaurant.order &&
+            <ProfileCardButton
+              target="blank"
+              href={restaurant.order}
+            >
+              Order
+            </ProfileCardButton>
+          }
+        </div>
+      </ProfileCardUpper>
+      <ProfileCardLower>
+        <ProfileCardIcons>
+          <ProfileCardIcon className="material-icons" onClick={() => toggleSearching()}>
+            {isSearching
+              ?
+              'close'
+              :
+              'search'
+            }
+          </ProfileCardIcon>
+          <ProfileCardIcon className="material-icons" onClick={() => toggleFiltering()}>
+            {isFiltering
+              ?
+              'close'
+              :
+              'filter_list'
+            }
+          </ProfileCardIcon>
+        </ProfileCardIcons>
+        {!isSearching && !isFiltering
+          ?
+          <div style={{ overflow: 'hidden' }}>
+            <ProfileCardSections>
+              <PoseGroup key="1" preEnterPose='preEnter'>
+                {sections.map((section) =>
+                  <ProfileCardSection key={section} active={activeSection === section}>
+                    <Link
+                      activeClass="active"
+                      onClick={() => handleSetActive(section)}
+                      to={section}
+                      spy={true}
+                      smooth={true}
+                      offset={-52}
+                      duration={500}
+                      onSetActive={() => handleSetActive(section)}
+                    >
+                        {section}
+                      </Link>
+                  </ProfileCardSection>
+                )}
+              </PoseGroup>
+              <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
+              </div>
+            </ProfileCardSections>
+          </div>
+          :
+          <Fragment>
+            {isSearching &&
+              <ProfileCardSearchContainer>
+                <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
+              </ProfileCardSearchContainer>
+            }
+            {isFiltering &&
+              <ProfileCardFilterContainer width={(8*sortOptions[0].label.length)}>
+                <Select
+                  options={sortOptions}
+                  classNamePrefix="profileCardFilterSelect"
+                  placeholder="Sort"
+                  onChange={(option) => handleSort(option)}
+                  value={sortOption}
+                  />
+              </ProfileCardFilterContainer>
+            }
+          </Fragment>
+        }
+      </ProfileCardLower>
+    </ProfileCardWrapper>
+  )
+}) ;
 
 export default ProfileCard;

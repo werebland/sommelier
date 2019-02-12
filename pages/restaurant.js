@@ -143,7 +143,7 @@ const Overlay = styled(PosedOverlay)`
   right: 0;
   left: 0;
   bottom: 0;
-  background: rgba(31,31,31,0.48);
+  background: rgba(31,31,31,0.88);
   display: flex;
   z-index: 88;
 `;
@@ -315,6 +315,7 @@ class Restaurant extends Component {
       },
       menu: this.props.restaurant.menus[0],
       isSticky: false,
+      profileCardHeight: 149,
     };
     this.profileCardRef = React.createRef()
   }
@@ -340,6 +341,10 @@ class Restaurant extends Component {
   }
 
   componentDidMount() {
+    const profileCardHeight = this.profileCardRef.current.offsetHeight
+    this.setState({
+      profileCardHeight
+    })
     if (Object.keys(this.props.restaurant).length > 0) {
       this.fetchItems()
       let date = moment().format('YYYYMMDD')
@@ -383,7 +388,6 @@ class Restaurant extends Component {
 
   handleScroll() {
     const scrollDistance = window.scrollY
-    console.log(this.profileCardRef.current)
     if (!this.state.isSticky && scrollDistance >= 200) {
       this.setState({
         isSticky: true
@@ -501,6 +505,12 @@ class Restaurant extends Component {
 
   }
 
+  handleSetActive(section) {
+    this.setState({
+      activeSection: section
+    })
+  }
+
   render() {
 
     if (Object.keys(this.props.restaurant).length === 0) {
@@ -548,29 +558,28 @@ class Restaurant extends Component {
         </Head>
         <PoseGroup preEnterPose="preEnter">
           {this.state.overlayVisible &&
-            <Overlay key="1"/>
+            <Overlay key="1" onClick={() => this.setState({ overlayVisible: false, activeItem: " "})}/>
           }
         </PoseGroup>
         <Profile
           image={this.props.restaurant.image}
         />
-        <div ref={this.profileCardRef}>
-          <ProfileCard
-            restaurant={this.props.restaurant}
-            sections={this.state.menu.sections}
-            activeSection={this.state.activeSection}
-            handleSetActive={(section) => this.setState({ activeSection: section })}
-            handleSectionSelect={(section) => this.setState({ activeSection: section, sectionItems: this.state.groupedItems[section] })}
-            isSearching={this.state.isSearching}
-            toggleSearching={() => this.setState({isSearching: !this.state.isSearching, isFiltering: false})}
-            isFiltering={this.state.isFiltering}
-            toggleFiltering={() => this.setState({isFiltering: !this.state.isFiltering, isSearching: false})}
-            handleSearch={(value) => this.setState({ term: value })}
-            isSticky={this.state.isSticky}
-            handleSort={(sortBy) => this.handleSort(sortBy)}
-            sortOption={this.state.sortOption}
-          />
-        </div>
+        <ProfileCard
+          restaurant={this.props.restaurant}
+          sections={this.state.menu.sections}
+          activeSection={this.state.activeSection}
+          handleSetActive={(section, e) => this.handleSetActive(section, e)}
+          isSearching={this.state.isSearching}
+          toggleSearching={() => this.setState({isSearching: !this.state.isSearching, isFiltering: false})}
+          isFiltering={this.state.isFiltering}
+          toggleFiltering={() => this.setState({isFiltering: !this.state.isFiltering, isSearching: false})}
+          handleSearch={(value) => this.setState({ term: value })}
+          isSticky={this.state.isSticky}
+          handleSort={(sortBy) => this.handleSort(sortBy)}
+          sortOption={this.state.sortOption}
+          ref={this.profileCardRef}
+          height={this.state.profileCardHeight}
+        />
         <Scroller>
           <NoSSR>
             {this.props.restaurant.menus.length > 1 &&
