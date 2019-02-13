@@ -1,11 +1,12 @@
 import React, {Fragment} from 'react';
 import styled from 'styled-components';
 import _ from 'lodash'
-import { Link } from 'react-scroll'
 import posed, {PoseGroup} from 'react-pose'
 import Select from 'react-select'
 import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
+
+import SectionsMenu from './SectionsMenu'
 
 const ProfileCardWrapper = styled.div`
   width: calc(100vw - 40px);
@@ -372,30 +373,7 @@ const ProfileCard = React.forwardRef((props, ref) => {
         </ProfileCardIcons>
         {!isSearching && !isFiltering
           ?
-          <div style={{ overflow: 'hidden' }}>
-            <ProfileCardSections>
-              <PoseGroup key="1" preEnterPose='preEnter'>
-                {sections.map((section) =>
-                  <ProfileCardSection key={section} active={activeSection === section}>
-                    <Link
-                      activeClass="active"
-                      onClick={() => handleSetActive(section)}
-                      to={section}
-                      spy={true}
-                      smooth={true}
-                      offset={-52}
-                      duration={500}
-                      onSetActive={() => handleSetActive(section)}
-                    >
-                        {section}
-                      </Link>
-                  </ProfileCardSection>
-                )}
-              </PoseGroup>
-              <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
-              </div>
-            </ProfileCardSections>
-          </div>
+          <SectionsMenu sections={sections} activeSection={activeSection} handleSetActive={(section) => handleSetActive(section)} />
           :
           <ProfileCardActions>
             {isSearching &&
