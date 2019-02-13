@@ -4,6 +4,8 @@ import _ from 'lodash'
 import { Link } from 'react-scroll'
 import posed, {PoseGroup} from 'react-pose'
 import Select from 'react-select'
+import MaskedInput from 'react-text-mask'
+import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
 const ProfileCardWrapper = styled.div`
   width: calc(100vw - 40px);
@@ -144,6 +146,13 @@ const ProfileCardSection = styled(PosedProfileCardSection)`
   }
 `;
 
+const ProfileCardActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+`;
+
 const ProfileCardSearchContainer = styled.div`
   width: 100%;
   height: 24px;
@@ -162,6 +171,7 @@ const ProfileCardSearchInput = styled.input`
   font-size: 1rem;
   font-weight: 400;
   color: #1f1f1f;
+  box-sizing: border-box;
 
   &::placeholder {
     font-size: 1rem;
@@ -178,8 +188,9 @@ const ProfileCardSearchInput = styled.input`
 const ProfileCardFilterContainer = styled.div`
   width: 100%;
   height: 24px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
+  box-sizing: border-box;
 
   & .profileCardFilterSelect__menu {
     z-index: 88;
@@ -188,6 +199,7 @@ const ProfileCardFilterContainer = styled.div`
   & .profileCardFilterSelect__value-container {
     width: ${props => props.width}px;
     min-width: 60px;
+    box-sizing: border-box;
   }
 
   & .profileCardFilterSelect__control {
@@ -230,21 +242,48 @@ const ProfileCardFilterContainer = styled.div`
   }
 `;
 
+const PriceInput = styled(MaskedInput)`
+  position: relative;
+  display: inline-flex;
+  height: 100%;
+  min-height: 24px;
+  border: 0;
+  border-bottom: 1px solid hsl(0,0%,80%);
+  outline: 0;
+  box-shadow: none;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #1f1f1f;
+  box-sizing: border-box;
+  padding-left: 8px;
+  width: ${props => `calc(100% - ${props.filterWidth}px)`};
+
+  &::placeholder {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #9f9f9f;
+  }
+
+  &:focus, &:hover, &:active {
+    border-color: #1f1f1f;
+  }
+`;
+
 const sortOptions = [
   {
-    label: 'Price ($ to $$$)',
+    label: '$ to $$$',
     value: 'priceAsc',
   },
   {
-    label: 'Price ($$$ to $)',
+    label: '$$$ to $',
     value: 'priceDsc',
   },
   {
-    label: 'Name (A to Z)',
+    label: 'A to Z',
     value: 'nameAsc',
   },
   {
-    label: 'Name (Z to A)',
+    label: 'Z to A',
     value: 'nameDsc',
   },
 ]
@@ -271,6 +310,11 @@ const ProfileCard = React.forwardRef((props, ref) => {
         sortOption,
         height
       } = props
+
+    const numberMask = createNumberMask({
+      prefix: '$',
+      suffix: '' // This will put the dollar sign at the end, with a space.
+    })
     return (
     <ProfileCardWrapper isSticky={isSticky} ref={ref} height={height}>
       <ProfileCardUpper>
@@ -353,24 +397,33 @@ const ProfileCard = React.forwardRef((props, ref) => {
             </ProfileCardSections>
           </div>
           :
-          <Fragment>
+          <ProfileCardActions>
             {isSearching &&
               <ProfileCardSearchContainer>
                 <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
               </ProfileCardSearchContainer>
             }
             {isFiltering &&
-              <ProfileCardFilterContainer width={(8*sortOptions[0].label.length)}>
-                <Select
-                  options={sortOptions}
-                  classNamePrefix="profileCardFilterSelect"
-                  placeholder="Sort"
-                  onChange={(option) => handleSort(option)}
-                  value={sortOption}
-                  />
-              </ProfileCardFilterContainer>
+              <Fragment>
+                <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
+                  <Select
+                    options={sortOptions}
+                    classNamePrefix="profileCardFilterSelect"
+                    placeholder="Sort"
+                    onChange={(option) => handleSort(option)}
+                    value={sortOption}
+                    />
+                </ProfileCardFilterContainer>
+                <PriceInput
+                  filterWidth={(8*sortOptions[0].label.length)}
+                  placeholder="Max price"
+                  onChange={(e) => handlePrice(e.target.value)}
+                  mask={numberMask}
+                  type="search"/>
+              </Fragment>
+
             }
-          </Fragment>
+          </ProfileCardActions>
         }
       </ProfileCardLower>
     </ProfileCardWrapper>

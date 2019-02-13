@@ -66,6 +66,11 @@ const SwiperStatus = styled.div`
 
 const SwiperSlick = styled.div`
   width: 100%;
+
+  & .slick-track {
+    display: flex;
+    flex-flow: row nowrap;
+  }
 `;
 
 const ItemSlideWrapper = styled.div`
@@ -78,6 +83,7 @@ const ItemSlideWrapper = styled.div`
   box-sizing: border-box;
   padding-right: 10px;
   color: #1f1f1f;
+  margin-left: ${props => props.itemsLength == 1 ? '16px' : '0'};
 `;
 
 const ItemSlide = styled.div`
@@ -261,7 +267,7 @@ class Swiper extends Component {
         <SwiperSlick>
           <Slider ref={slider => (this.slider = slider)} {...settings}>
             {this.props.items.map((item) =>
-              <ItemSlideWrapper key={item.id}>
+              <ItemSlideWrapper key={item.id} itemsLength={this.props.items.length}>
                 <ItemSlide>
                   <ItemSlideImage image={item.image}/>
                   <ItemSlideContent>

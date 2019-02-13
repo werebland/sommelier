@@ -427,6 +427,7 @@ class Restaurant extends Component {
       this.setState({
         groupedItems,
         items,
+        currentItems: items,
         isLoading: false,
       })
     }
@@ -497,8 +498,25 @@ class Restaurant extends Component {
     }
     this.setState({
       sortOption: option,
-      items,
+      currentItems: items,
     })
+  }
+
+  handlePrice(value) {
+    const price = _.trimStart(value, '$')
+    console.log(price);
+    let {items} = this.state
+    if (price == "") {
+      this.setState({
+        currentItems: items
+      })
+    } else {
+      items = _.filter(items, function(o) { return o.price <= price })
+      console.log(items)
+      this.setState({
+        currentItems: items
+      })
+    }
   }
 
   handleTags() {
@@ -576,6 +594,7 @@ class Restaurant extends Component {
           handleSearch={(value) => this.setState({ term: value })}
           isSticky={this.state.isSticky}
           handleSort={(sortBy) => this.handleSort(sortBy)}
+          handlePrice={(value) => this.handlePrice(value)}
           sortOption={this.state.sortOption}
           ref={this.profileCardRef}
           height={this.state.profileCardHeight}
@@ -607,7 +626,7 @@ class Restaurant extends Component {
                     ?
                     <Menu sections={['Results']} items={results} onItemClick={(id) => this.handleItemView(id)}/>
                     :
-                    <Menu sections={this.state.menu.sections} items={this.state.items} onItemClick={(id) => this.handleItemView(id)}/>
+                    <Menu sections={this.state.menu.sections} items={this.state.currentItems} onItemClick={(id) => this.handleItemView(id)}/>
                   }
                 </Test>
             }
