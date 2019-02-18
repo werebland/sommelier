@@ -149,18 +149,18 @@ const Overlay = styled(PosedOverlay)`
 `;
 
 const PosedSearchContainer = posed.div({
-    enter: {
-      opacity: 1,
-      height: 60,
-    },
-    preEnter: {
-      opacity: 0,
-      height: 0,
-    },
-    exit: {
-      opacity: 0,
-      height: 0,
-    }
+  enter: {
+    opacity: 1,
+    height: 60,
+  },
+  preEnter: {
+    opacity: 0,
+    height: 0,
+  },
+  exit: {
+    opacity: 0,
+    height: 0,
+  }
 })
 
 const SearchContainer = styled(PosedSearchContainer)`
@@ -450,7 +450,6 @@ class Restaurant extends Component {
     }
     let date = moment().format('YYYYMMDD')
     let views = item.views
-    console.log(views);
     if (views) {
       console.log('Views exist');
       if (_.has(views, date)) {
@@ -465,11 +464,9 @@ class Restaurant extends Component {
         [date]: 0
       }
     }
-    console.log(views);
     const data = {
       views
     }
-    console.log(data);
     base.updateDoc('items/' + id, data)
       .then(() => {
         console.log('updated')
@@ -504,7 +501,6 @@ class Restaurant extends Component {
 
   handlePrice(value) {
     const price = _.trimStart(value, '$')
-    console.log(price);
     let {items} = this.state
     if (price == "") {
       this.setState({
@@ -512,7 +508,6 @@ class Restaurant extends Component {
       })
     } else {
       items = _.filter(items, function(o) { return o.price <= price })
-      console.log(items)
       this.setState({
         currentItems: items
       })

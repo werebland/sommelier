@@ -257,7 +257,7 @@ const PriceInput = styled(MaskedInput)`
   color: #1f1f1f;
   box-sizing: border-box;
   padding-left: 8px;
-  width: ${props => `calc(100% - ${props.filterWidth}px)`};
+  width: ${props => `calc(100% - ${props.filterwidth}px)`};
 
   &::placeholder {
     font-size: 1rem;
@@ -371,38 +371,34 @@ const ProfileCard = React.forwardRef((props, ref) => {
             }
           </ProfileCardIcon>
         </ProfileCardIcons>
-        {!isSearching && !isFiltering
-          ?
-          <SectionsMenu sections={sections} activeSection={activeSection} handleSetActive={(section) => handleSetActive(section)} />
-          :
-          <ProfileCardActions>
-            {isSearching &&
-              <ProfileCardSearchContainer>
-                <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
-              </ProfileCardSearchContainer>
-            }
-            {isFiltering &&
-              <Fragment>
-                <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
-                  <Select
-                    options={sortOptions}
-                    classNamePrefix="profileCardFilterSelect"
-                    placeholder="Sort"
-                    onChange={(option) => handleSort(option)}
-                    value={sortOption}
-                    />
-                </ProfileCardFilterContainer>
-                <PriceInput
-                  filterWidth={(8*sortOptions[0].label.length)}
-                  placeholder="Max price"
-                  onChange={(e) => handlePrice(e.target.value)}
-                  mask={numberMask}
-                  type="search"/>
-              </Fragment>
+        <SectionsMenu sections={sections} activeSection={activeSection} handleSetActive={(section) => handleSetActive(section)} visible={!isSearching && !isFiltering}/>
+        <ProfileCardActions>
+          {isSearching &&
+            <ProfileCardSearchContainer>
+              <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
+            </ProfileCardSearchContainer>
+          }
+          {isFiltering &&
+            <Fragment>
+              <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
+                <Select
+                  options={sortOptions}
+                  classNamePrefix="profileCardFilterSelect"
+                  placeholder="Sort"
+                  onChange={(option) => handleSort(option)}
+                  value={sortOption}
+                  />
+              </ProfileCardFilterContainer>
+              <PriceInput
+                filterwidth={(8*sortOptions[0].label.length)}
+                placeholder="Max price"
+                onChange={(e) => handlePrice(e.target.value)}
+                mask={numberMask}
+                type="search"/>
+            </Fragment>
 
-            }
-          </ProfileCardActions>
-        }
+          }
+        </ProfileCardActions>
       </ProfileCardLower>
     </ProfileCardWrapper>
   )

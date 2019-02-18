@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import posed, {PoseGroup} from 'react-pose'
 import { Link } from 'react-scroll'
+import smoothscroll from 'smoothscroll-polyfill';
 
 const PosedProfileCardSections = posed.div({
   enter: {
@@ -10,7 +11,7 @@ const PosedProfileCardSections = posed.div({
 })
 
 const ProfileCardSections = styled.div`
-  display: flex;
+  display: ${props => props.visible ? 'flex' : 'none'};
   flex: 1;
   flex-flow: row nowrap;
   align-items: center;
@@ -18,6 +19,7 @@ const ProfileCardSections = styled.div`
   padding-bottom: 50px;
   overflow-y: hidden;
   overflow-x: scroll;
+  scroll-behavior: smooth;
 `;
 
 const PosedProfileCardSection = posed.span({
@@ -59,11 +61,14 @@ class SectionsMenu extends Component {
     this.sectionsRef = React.createRef()
   }
 
+  componentDidMount() {
+    smoothscroll.polyfill();
+  }
+
   processSetActive(section, i) {
     const container = this.sectionsRef.current
     const activeSection = this.refCollection[i].current
     const initialOffset = this.refCollection[0].current.offsetLeft
-    console.log(activeSection.offsetLeft);
     container.scrollLeft = activeSection.offsetLeft - initialOffset
     this.props.handleSetActive(section)
   }
@@ -71,11 +76,11 @@ class SectionsMenu extends Component {
   refCollection = {}
 
   render() {
-    const { sections, activeSection, handleSetActive } = this.props
+    const { sections, activeSection, handleSetActive, visible } = this.props
 
     return (
       <div style={{ overflow: 'hidden' }}>
-        <ProfileCardSections ref={this.sectionsRef}>
+        <ProfileCardSections ref={this.sectionsRef} visible={visible}>
           <PoseGroup key="1" preEnterPose='preEnter'>
             {sections.map((section, i) =>
               {
