@@ -504,12 +504,14 @@ class Restaurant extends Component {
     let {items} = this.state
     if (price == "") {
       this.setState({
-        currentItems: items
+        currentItems: items,
+        price,
       })
     } else {
       items = _.filter(items, function(o) { return o.price <= price })
       this.setState({
-        currentItems: items
+        currentItems: items,
+        price
       })
     }
   }
@@ -591,6 +593,7 @@ class Restaurant extends Component {
           handleSort={(sortBy) => this.handleSort(sortBy)}
           handlePrice={(value) => this.handlePrice(value)}
           sortOption={this.state.sortOption}
+          price={this.state.price}
           ref={this.profileCardRef}
           height={this.state.profileCardHeight}
         />

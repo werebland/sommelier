@@ -10,7 +10,7 @@ import SectionsMenu from './SectionsMenu'
 
 const ProfileCardWrapper = styled.div`
   width: calc(100vw - 40px);
-  padding: 8px 16px 0 16px;
+  padding: 8px 16px 0;
   box-sizing: border-box;
   background: #fff;
   border-radius: 8px;
@@ -200,6 +200,7 @@ const ProfileCardFilterContainer = styled.div`
   & .profileCardFilterSelect__value-container {
     width: ${props => props.width}px;
     min-width: 60px;
+    height: 24px;
     box-sizing: border-box;
   }
 
@@ -240,6 +241,10 @@ const ProfileCardFilterContainer = styled.div`
 
   & .profileCardFilterSelect__option--active {
     background-color: #1f1f1f;
+  }
+
+  & .profileCardFilterSelect__indicators {
+    height: 24px;
   }
 `;
 
@@ -289,6 +294,17 @@ const sortOptions = [
   },
 ]
 
+const PosedIcon = posed.div({
+  enter: {
+    scale: 1,
+    opacity: 1,
+  },
+  exit: {
+    scale: 0,
+    opacity: 0,
+  },
+})
+
 const ProfileCard = React.forwardRef((props, ref) => {
 
     const {
@@ -309,7 +325,8 @@ const ProfileCard = React.forwardRef((props, ref) => {
         handlePrice,
         handleTags,
         sortOption,
-        height
+        height,
+        price
       } = props
 
     const numberMask = createNumberMask({
@@ -354,22 +371,38 @@ const ProfileCard = React.forwardRef((props, ref) => {
       </ProfileCardUpper>
       <ProfileCardLower>
         <ProfileCardIcons>
-          <ProfileCardIcon className="material-icons" onClick={() => toggleSearching()}>
+          <PoseGroup>
             {isSearching
               ?
-              'close'
+              <PosedIcon key="0">
+                <ProfileCardIcon className="material-icons" onClick={() => toggleSearching()}>
+                  close
+                </ProfileCardIcon>
+              </PosedIcon>
               :
-              'search'
+              <PosedIcon key="2">
+                <ProfileCardIcon className="material-icons" onClick={() => toggleSearching()}>
+                  search
+                </ProfileCardIcon>
+              </PosedIcon>
             }
-          </ProfileCardIcon>
-          <ProfileCardIcon className="material-icons" onClick={() => toggleFiltering()}>
+          </PoseGroup>
+          <PoseGroup>
             {isFiltering
               ?
-              'close'
+              <PosedIcon key="3">
+                <ProfileCardIcon className="material-icons" onClick={() => toggleFiltering()}>
+                  close
+                </ProfileCardIcon>
+              </PosedIcon>
               :
-              'filter_list'
+              <PosedIcon key="4">
+                <ProfileCardIcon className="material-icons" onClick={() => toggleFiltering()}>
+                  filter_list
+                </ProfileCardIcon>
+              </PosedIcon>
             }
-          </ProfileCardIcon>
+          </PoseGroup>
         </ProfileCardIcons>
         <SectionsMenu sections={sections} activeSection={activeSection} handleSetActive={(section) => handleSetActive(section)} visible={!isSearching && !isFiltering}/>
         <ProfileCardActions>
@@ -391,8 +424,9 @@ const ProfileCard = React.forwardRef((props, ref) => {
               </ProfileCardFilterContainer>
               <PriceInput
                 filterwidth={(8*sortOptions[0].label.length)}
-                placeholder="Max price"
+                placeholder="$ (max)"
                 onChange={(e) => handlePrice(e.target.value)}
+                value={price}
                 mask={numberMask}
                 type="search"/>
             </Fragment>
