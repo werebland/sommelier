@@ -173,6 +173,7 @@ const ProfileCardSearchInput = styled.input`
   font-weight: 400;
   color: #1f1f1f;
   box-sizing: border-box;
+  border-radius: 0 !important;
 
   &::placeholder {
     font-size: 1rem;
@@ -263,6 +264,7 @@ const PriceInput = styled(MaskedInput)`
   box-sizing: border-box;
   padding-left: 8px;
   width: ${props => `calc(100% - ${props.filterwidth}px)`};
+  border-radius: 0 !important;
 
   &::placeholder {
     font-size: 1rem;
