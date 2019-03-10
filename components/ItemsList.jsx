@@ -129,12 +129,12 @@ const ItemCard = ({ item, onItemClick }) => (
       <ItemCardDescription>
         {item.image === "" &&
           <React.Fragment>
-            {item.name.length > 30 ? ellipsize(item.description, 45) : ellipsize(item.description, 85)}
+            {item.name.length > 30 ? ellipsize(item.description, 45) : ellipsize(item.description, 75)}
           </React.Fragment>
         }
         {item.image !== "" &&
           <React.Fragment>
-            {item.name.length > 21 ? ellipsize(item.description, 30) : ellipsize(item.description, 60)}
+            {item.name.length > 21 ? ellipsize(item.description, 25) : ellipsize(item.description, 55)}
           </React.Fragment>
         }
       </ItemCardDescription>

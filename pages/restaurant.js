@@ -316,6 +316,7 @@ class Restaurant extends Component {
       menu: this.props.restaurant.menus[0],
       isSticky: false,
       profileCardHeight: 149,
+      windowHeight: 600,
     };
     this.profileCardRef = React.createRef()
   }
@@ -341,9 +342,11 @@ class Restaurant extends Component {
   }
 
   componentDidMount() {
+    console.log(window.innerHeight);
     const profileCardHeight = this.profileCardRef.current.offsetHeight
     this.setState({
-      profileCardHeight
+      profileCardHeight,
+      windowHeight: window.innerHeight
     })
     if (Object.keys(this.props.restaurant).length > 0) {
       this.fetchItems()
@@ -641,7 +644,8 @@ class Restaurant extends Component {
                   itemIndex={this.state.isSearching ? _.findIndex(results, { id: this.state.activeItem }) : _.findIndex(this.state.groupedItems[this.state.activeSection], { id: this.state.activeItem })}
                   title={this.state.isSearching ? 'Results' : this.state.activeSection}
                   isVisible={this.state.activeItem !== ""}
-                  handleCollapse={() => this.setState({ activeItem: "", overlayVisible: false })}/>
+                  handleCollapse={() => this.setState({ activeItem: "", overlayVisible: false })}
+                  height={this.state.windowHeight}/>
               </StyledSwiperContainer>
             }
           </PoseGroup>

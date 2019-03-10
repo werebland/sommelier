@@ -7,13 +7,14 @@ import Sharer from './Sharer'
 
 const SwiperWrapper = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: ${props => props.windowHeight}px;
   position: absolute;
   background: transparent;
   display: flex;
   flex-flow: column nowrap;
   color: #fff;
   box-sizing: border-box;
+  overflow: hidden;
 `;
 
 const SwiperHeader = styled.div`
@@ -84,6 +85,7 @@ const ItemSlideWrapper = styled.div`
   padding-right: 10px;
   color: #1f1f1f;
   margin-left: ${props => props.itemsLength == 1 ? '16px' : '0'};
+  overflow: scroll;
 `;
 
 const ItemSlide = styled.div`

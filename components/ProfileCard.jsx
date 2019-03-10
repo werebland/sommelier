@@ -23,6 +23,12 @@ const ProfileCardWrapper = styled.div`
   left: 20px;
   top: ${props => props.isSticky ? `-${props.height - 40}px` : `${240 - props.height}px`};
   z-index: 87;
+
+  @media only screen and (max-width: 320px) {
+    width: calc(100vw - 16px);
+    left: 8px;
+    padding: 8px 8px 0;
+  }
 `;
 
 const ProfileCardUpper = styled.div`
