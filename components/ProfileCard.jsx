@@ -180,6 +180,7 @@ const ProfileCardSearchInput = styled.input`
   color: #1f1f1f;
   box-sizing: border-box;
   border-radius: 0 !important;
+  appearance: none;
 
   &::placeholder {
     font-size: 1rem;
@@ -190,7 +191,6 @@ const ProfileCardSearchInput = styled.input`
   &:focus, &:hover, &:active {
     border-color: #1f1f1f;
   }
-
 `;
 
 const ProfileCardFilterContainer = styled.div`
@@ -271,6 +271,7 @@ const PriceInput = styled(MaskedInput)`
   padding-left: 8px;
   width: ${props => `calc(100% - ${props.filterwidth}px)`};
   border-radius: 0 !important;
+  appearance: none;
 
   &::placeholder {
     font-size: 1rem;

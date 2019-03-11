@@ -80,6 +80,7 @@ const ItemCardContent = styled.div`
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
+  justify-content: space-between;
 `;
 
 const ItemCardTitle = styled.h3`
@@ -100,7 +101,7 @@ const ItemCardSubtitle = styled.h5`
   font-size: .875rem;
   font-weight: 400;
   color: #9f9f9f;
-  margin: 0 0 4px 0;
+  margin: 0;
 `;
 
 const ItemCardDescription = styled.p`

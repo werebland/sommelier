@@ -67,17 +67,19 @@ const SwiperStatus = styled.div`
 
 const SwiperSlick = styled.div`
   width: 100%;
+  height: ${props => props.height}px;
 
   & .slick-track {
     display: flex;
     flex-flow: row nowrap;
+    height: ${props => props.height}px;
   }
 `;
 
 const ItemSlideWrapper = styled.div`
   width: calc( 100vw - 10px );
   height: 100%;
-  min-height: ${props => props.height};
+  min-height: ${props => props.height}px;
   background: transparent;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -91,7 +93,7 @@ const ItemSlideWrapper = styled.div`
 const ItemSlide = styled.div`
   width: 100%;
   height: 100%;
-  min-height: ${props => props.height};
+  min-height: ${props => props.height}px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   display: flex;
@@ -266,11 +268,11 @@ class Swiper extends Component {
             of {this.props.items.length}
           </SwiperStatus>
         </SwiperHeader>
-        <SwiperSlick>
+        <SwiperSlick height={this.props.height - 64}>
           <Slider ref={slider => (this.slider = slider)} {...settings}>
             {this.props.items.map((item) =>
-              <ItemSlideWrapper key={item.id} itemsLength={this.props.items.length} height={this.props.height}>
-                <ItemSlide height={this.props.height}>
+              <ItemSlideWrapper key={item.id} itemsLength={this.props.items.length} height={this.props.height - 64}>
+                <ItemSlide height={this.props.height - 64}>
                   <ItemSlideImage image={item.image}/>
                   <ItemSlideContent>
                     <ItemSlideTitle>
