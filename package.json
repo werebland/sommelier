@@ -41,5 +41,8 @@
   "license": "ISC",
   "devDependencies": {
     "eslint": "5.3.0"
+  },
+  "engines": {
+    "node": "11.11.0"
   }
 }
