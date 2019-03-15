@@ -3,33 +3,33 @@
   "pages": {
     "/_app": [
       "static/runtime/webpack-f0c6edbea5b547edc23f.js",
-      "static/chunks/commons.da41623e3c12c2caf17e.js",
-      "static/runtime/main-873f2168cef31ffb3157.js"
+      "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js",
+      "static/runtime/main-f61845ea9359203df58d.js"
     ],
     "/index": [
       "static/runtime/webpack-f0c6edbea5b547edc23f.js",
-      "static/chunks/commons.da41623e3c12c2caf17e.js",
-      "static/runtime/main-873f2168cef31ffb3157.js"
+      "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js",
+      "static/runtime/main-f61845ea9359203df58d.js"
     ],
     "/item": [
       "static/runtime/webpack-f0c6edbea5b547edc23f.js",
-      "static/chunks/commons.da41623e3c12c2caf17e.js",
-      "static/runtime/main-873f2168cef31ffb3157.js"
+      "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js",
+      "static/runtime/main-f61845ea9359203df58d.js"
     ],
     "/restaurant": [
       "static/runtime/webpack-f0c6edbea5b547edc23f.js",
-      "static/chunks/commons.da41623e3c12c2caf17e.js",
-      "static/runtime/main-873f2168cef31ffb3157.js"
+      "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js",
+      "static/runtime/main-f61845ea9359203df58d.js"
     ],
     "/_error": [
       "static/runtime/webpack-f0c6edbea5b547edc23f.js",
-      "static/chunks/commons.da41623e3c12c2caf17e.js",
-      "static/runtime/main-873f2168cef31ffb3157.js"
+      "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js",
+      "static/runtime/main-f61845ea9359203df58d.js"
     ],
     "/": [
       "static/runtime/webpack-f0c6edbea5b547edc23f.js",
-      "static/chunks/commons.da41623e3c12c2caf17e.js",
-      "static/runtime/main-873f2168cef31ffb3157.js"
+      "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js",
+      "static/runtime/main-f61845ea9359203df58d.js"
     ]
   }
 }
