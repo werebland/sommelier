@@ -765,7 +765,7 @@
       "publicPath": "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js"
     }
   ],
-  "../modules/_core": [
+  "../../modules/_core": [
     {
       "id": "WEpk",
       "name": "./node_modules/core-js/library/modules/_core.js",
@@ -837,7 +837,7 @@
       "publicPath": "static/chunks/commons.1f56ad5bd2d9bbd5f26f.js"
     }
   ],
-  "./../webpack/buildin/module.js": [
+  "./../../../webpack/buildin/module.js": [
     {
       "id": "YuTi",
       "name": "./node_modules/webpack/buildin/module.js",
