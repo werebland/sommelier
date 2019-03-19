@@ -16,7 +16,7 @@ if (!firebase.apps.length) {
 }
 
 var db = firebase.firestore(app);
-var settings = { timestampsInSnapshots: true };
+var settings = { };
 db.settings(settings);
 
 var base = Rebase.createClass(db);

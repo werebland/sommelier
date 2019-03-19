@@ -43,7 +43,8 @@ const PosedItemCardContainer = posed.article({
 
 const ItemCardContainer = styled(PosedItemCardContainer)`
   width: 100%;
-  height: 72px;
+  height: 100%;
+  min-height: 72px;
   display: flex;
   flex-flow: row nowrap;
   padding: 8px 0;
@@ -76,7 +77,8 @@ const ItemCardImage = styled.div`
 `;
 
 const ItemCardContent = styled.div`
-  height: 72px;
+  height: 100%;
+  min-height: 72px;
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
