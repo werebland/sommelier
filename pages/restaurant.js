@@ -10,6 +10,7 @@ import Fuse from 'fuse.js'
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import Select from 'react-select'
 import NoSSR from 'react-no-ssr';
+import DataField from 'datafield'
 
 import Profile from '../components/Profile'
 import ProfileCard from '../components/ProfileCard'
@@ -288,6 +289,17 @@ const MenuSelectContainer = styled.div`
   }
 `;
 
+const tagOptions = [
+  {
+    label: 'Gluten-free',
+    value: 'gluten-free',
+  },
+  {
+    label: 'Vegan',
+    value: 'vegan',
+  }
+]
+
 class Restaurant extends Component {
 
   constructor(props) {
@@ -296,27 +308,22 @@ class Restaurant extends Component {
       activeItem: "",
       activeSection: this.props.restaurant.menus[0].sections[0],
       items: [],
-      filteredItems: [],
-      groupedItems: {},
       isSearching: false,
-      sectionItems: [],
       isFiltering: false,
       isLoading: true,
       isChangingFilter: false,
       overlayVisible: false,
       term: '',
-      currentItems: [],
-      filters: {
-        section: '',
-        sortBy: '',
-        priceMin: '',
-        priceMax: '',
-        tags: [],
-      },
       menu: this.props.restaurant.menus[0],
       isSticky: false,
       profileCardHeight: 149,
       windowHeight: 600,
+      tags: [],
+      priceMax: 99999999,
+      sortBy: {
+        by: '',
+        order: '',
+      }
     };
     this.profileCardRef = React.createRef()
   }
@@ -412,28 +419,13 @@ class Restaurant extends Component {
       withRefs: true,
       query: (ref) => ref.where('restaurantId', '==', restaurantId),
     }).then(data => {
-      this.processItems(data)
+      this.setState({
+        items: data,
+        isLoading: false,
+      })
     }).catch(err => {
       console.log(err);
     })
-  }
-
-  processItems(items) {
-    let sections = []
-    _.each(items, function(item) {
-      let section = item.section
-      sections.push(section)
-    })
-    if (sections.length === items.length) {
-      const uniqueSections = _.uniq(sections)
-      const groupedItems = _.groupBy(items, 'section')
-      this.setState({
-        groupedItems,
-        items,
-        currentItems: items,
-        isLoading: false,
-      })
-    }
   }
 
   handleItemView(id, result) {
@@ -479,44 +471,38 @@ class Restaurant extends Component {
   }
 
   handleSort(option) {
-    let {items} = this.state
+    let {sortBy} = this.state
     switch (option.value) {
       case "priceAsc":
-        items = _.sortBy(items, ['price'])
+        sortBy = {
+          by: 'price',
+          order: 'asc'
+        }
         break;
       case "priceDsc":
-        items = _.sortBy(items, ['price']).reverse()
+        sortBy = {
+          by: 'price',
+          order: 'desc'
+        }
         break;
       case "nameAsc":
-        items = _.sortBy(items, ['name'])
+        sortBy = {
+          by: 'name',
+          order: 'asc'
+        }
         break;
       case "nameDsc":
-        items = _.sortBy(items, ['name']).reverse()
+        sortBy = {
+          by: 'name',
+          order: 'desc'
+        }
         break;
       default:
-
     }
     this.setState({
       sortOption: option,
-      currentItems: items,
+      sortBy
     })
-  }
-
-  handlePrice(value) {
-    const price = _.trimStart(value, '$')
-    let {items} = this.state
-    if (price == "") {
-      this.setState({
-        currentItems: items,
-        price,
-      })
-    } else {
-      items = _.filter(items, function(o) { return o.price <= price })
-      this.setState({
-        currentItems: items,
-        price
-      })
-    }
   }
 
   handleTags() {
@@ -567,6 +553,8 @@ class Restaurant extends Component {
       menuOptions.push({ value: menu, label: menu.name })
     ))
 
+    let items = new DataField(this.state.items)
+
     return (
       <RestaurantWrapper>
         <Head>
@@ -594,11 +582,14 @@ class Restaurant extends Component {
           handleSearch={(value) => this.setState({ term: value })}
           isSticky={this.state.isSticky}
           handleSort={(sortBy) => this.handleSort(sortBy)}
-          handlePrice={(value) => this.handlePrice(value)}
+          handlePrice={(value) => value !== '' ? this.setState({ priceMax: _.trimStart(value, '$') }) : this.setState({ priceMax: 99999999 })}
           sortOption={this.state.sortOption}
-          price={this.state.price}
+          price={this.state.priceMax === 99999999 ? null : this.state.priceMax}
           ref={this.profileCardRef}
           height={this.state.profileCardHeight}
+          tagOptions={tagOptions}
+          handleTags={(tags) => this.setState({ tags })}
+          tagOption={this.state.tags}
         />
         <Scroller>
           <NoSSR>
@@ -625,9 +616,15 @@ class Restaurant extends Component {
                 <Test key="1">
                   {this.state.isSearching && this.state.term !== ''
                     ?
-                    <Menu sections={['Results']} items={results} onItemClick={(id) => this.handleItemView(id)}/>
+                    <Menu
+                      sections={['Results']}
+                      items={results}
+                      onItemClick={(id) => this.handleItemView(id)}/>
                     :
-                    <Menu sections={this.state.menu.sections} items={this.state.currentItems} onItemClick={(id) => this.handleItemView(id)}/>
+                    <Menu
+                      sections={this.state.menu.sections}
+                      items={items.where('price').lt(this.state.priceMax).where('tags').includes().sort({by: this.state.sortBy.by, order: this.state.sortBy.order}).data}
+                      onItemClick={(id) => this.handleItemView(id)}/>
                   }
                 </Test>
             }

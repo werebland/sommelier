@@ -16,6 +16,7 @@ const ProfileCardSections = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   margin-bottom: -50px;
+  padding-top: 3px;
   padding-bottom: 50px;
   overflow-y: hidden;
   overflow-x: scroll;

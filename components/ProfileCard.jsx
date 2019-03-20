@@ -23,6 +23,7 @@ const ProfileCardWrapper = styled.div`
   left: 20px;
   top: ${props => props.isSticky ? `-${props.height - 40}px` : `${240 - props.height}px`};
   z-index: 87;
+  transition: 0.2s ease-out all;
 
   @media only screen and (max-width: 320px) {
     width: calc(100vw - 16px);
@@ -77,10 +78,13 @@ const ProfileCardButton = styled.a`
 
 const ProfileCardLower = styled.div`
   width: 100%;
-  height: 40px;
+  height: ${props => props.height};
   display: flex;
   flex-flow: row nowrap;
-  align-items: center;
+  align-items: flex-start;
+  padding: 8px 0 0;
+  box-sizing: border-box;
+  transition: 0.2s ease-out all;
 `;
 
 const ProfileCardIcons = styled.div`
@@ -154,7 +158,9 @@ const ProfileCardSection = styled(PosedProfileCardSection)`
 `;
 
 const ProfileCardActions = styled.div`
+
   display: flex;
+  flex-flow: column nowrap;
   align-items: center;
   justify-content: space-between;
   flex: 1;
@@ -194,11 +200,11 @@ const ProfileCardSearchInput = styled.input`
 `;
 
 const ProfileCardFilterContainer = styled.div`
-  width: 100%;
   height: 24px;
   display: inline-flex;
   align-items: flex-start;
   box-sizing: border-box;
+  margin-right: 8px;
 
   & .profileCardFilterSelect__menu {
     z-index: 88;
@@ -258,6 +264,7 @@ const ProfileCardFilterContainer = styled.div`
 const PriceInput = styled(MaskedInput)`
   position: relative;
   display: inline-flex;
+  flex: 1;
   height: 100%;
   min-height: 24px;
   border: 0;
@@ -269,6 +276,7 @@ const PriceInput = styled(MaskedInput)`
   color: #1f1f1f;
   box-sizing: border-box;
   padding-left: 8px;
+  min-width: 64px;
   width: ${props => `calc(100% - ${props.filterwidth}px)`};
   border-radius: 0 !important;
   appearance: none;
@@ -283,6 +291,106 @@ const PriceInput = styled(MaskedInput)`
     border-color: #1f1f1f;
   }
 `;
+
+const PosedIcon = posed.div({
+  enter: {
+    scale: 1,
+    opacity: 1,
+  },
+  exit: {
+    scale: 0,
+    opacity: 0,
+  },
+})
+
+const ProfileCardTagSelect = styled.div`
+    width: 100%;
+    height: 24px;
+    display: inline-flex;
+    align-items: flex-start;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+
+    & .profileCardTagSelect {
+      width: 100%;
+    }
+
+    & .profileCardTagSelect__menu {
+      z-index: 88;
+    }
+
+    & .profileCardTagSelect__value-container {
+      width: 100%;
+      min-width: 60px;
+      height: 24px;
+      box-sizing: border-box;
+    }
+
+    & .profileCardTagSelect__control {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid hsl(0, 0%, 80%);
+      border-radius: 0;
+      height: 24px;
+      min-height: 24px !important;
+    }
+
+    & .profileCardTagSelect__control.profileCardTagSelect__control--is-focused {
+      border: 0;
+      border-bottom: 1px solid #1f1f1f;
+      border-color: #1f1f1f;
+      box-shadow: none;
+          height: 24px;
+          min-height: 24px !important;
+    }
+
+    & .profileCardTagSelect__control.profileCardTagSelect__control--is-focused:hover {
+      border: 0;
+      border-bottom: 1px solid #1f1f1f;
+      border-color: #1f1f1f;
+    }
+
+    & .profileCardTagSelect__single-value {
+      font-weight: 400;
+      color: #1f1f1f;
+      font-size: .875rem;
+    }
+
+    & .profileCardTagSelect__placeholder {
+      font-weight: 400;
+      color: #9f9f9f;
+      font-size: 1rem;
+    }
+
+    & .profileCardTagSelect__option--active {
+      background-color: #1f1f1f;
+    }
+
+    & .profileCardTagSelect__indicators {
+      height: 24px;
+    }
+
+    & .profileCardTagSelect__indicator {
+      height: 36px;
+      width: 36px;
+    }
+
+    & .profileCardTagSelect__value-container--is-multi {
+      height: 24px;
+      display: flex;
+      flex-flow: row nowrap;
+      overflow: scroll;
+    }
+
+    & .profileCardTagSelect__multi-value {
+      background: #fff;
+      border: 1px solid #1f1f1f;
+      border-radius: 4px;
+    }
+`;
+
+
+
 
 const sortOptions = [
   {
@@ -302,17 +410,6 @@ const sortOptions = [
     value: 'nameDsc',
   },
 ]
-
-const PosedIcon = posed.div({
-  enter: {
-    scale: 1,
-    opacity: 1,
-  },
-  exit: {
-    scale: 0,
-    opacity: 0,
-  },
-})
 
 const ProfileCard = React.forwardRef((props, ref) => {
 
@@ -335,13 +432,16 @@ const ProfileCard = React.forwardRef((props, ref) => {
         handleTags,
         sortOption,
         height,
-        price
+        price,
+        tagOptions,
+        tagOption,
       } = props
 
     const numberMask = createNumberMask({
       prefix: '$',
       suffix: '' // This will put the dollar sign at the end, with a space.
     })
+
     return (
     <ProfileCardWrapper isSticky={isSticky} ref={ref} height={height}>
       <ProfileCardUpper>
@@ -349,7 +449,9 @@ const ProfileCard = React.forwardRef((props, ref) => {
           {restaurant.name}
         </ProfileCardTitle>
         <ProfileCardSubtitle>
-          {restaurant.cuisine} · {restaurant.price} · <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`} target="blank">{restaurant.address.street}.</a>
+          {restaurant.cuisine} · {restaurant.price} · <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`}
+              target="blank">{restaurant.address.street}.</a>
         </ProfileCardSubtitle>
         <div>
           {restaurant.phone &&
@@ -378,7 +480,7 @@ const ProfileCard = React.forwardRef((props, ref) => {
           }
         </div>
       </ProfileCardUpper>
-      <ProfileCardLower>
+      <ProfileCardLower height={isFiltering ? 'auto' : '40px'}>
         <ProfileCardIcons>
           <PoseGroup>
             {isSearching
@@ -413,7 +515,11 @@ const ProfileCard = React.forwardRef((props, ref) => {
             }
           </PoseGroup>
         </ProfileCardIcons>
-        <SectionsMenu sections={sections} activeSection={activeSection} handleSetActive={(section) => handleSetActive(section)} visible={!isSearching && !isFiltering}/>
+        <SectionsMenu
+          sections={sections}
+          activeSection={activeSection}
+          handleSetActive={(section) => handleSetActive(section)}
+          visible={!isSearching && !isFiltering}/>
         <ProfileCardActions>
           {isSearching &&
             <ProfileCardSearchContainer>
@@ -422,22 +528,38 @@ const ProfileCard = React.forwardRef((props, ref) => {
           }
           {isFiltering &&
             <Fragment>
-              <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
+              <div style={{display: 'inline-flex', flexFlow: 'row wrap', width: '100%', marginBottom: '8px'}}>
+                <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
+                  <Select
+                    options={sortOptions}
+                    classNamePrefix="profileCardFilterSelect"
+                    placeholder="Sort"
+                    onChange={(option) => handleSort(option)}
+                    value={sortOption}
+                    />
+                </ProfileCardFilterContainer>
+                <PriceInput
+                  filterwidth={(8*sortOptions[0].label.length)}
+                  placeholder="$ (max)"
+                  onChange={(e) => handlePrice(e.target.value)}
+                  value={price}
+                  mask={numberMask}
+                  type="search"/>
+              </div>
+              <ProfileCardTagSelect>
                 <Select
-                  options={sortOptions}
-                  classNamePrefix="profileCardFilterSelect"
-                  placeholder="Sort"
-                  onChange={(option) => handleSort(option)}
-                  value={sortOption}
+                  options={tagOptions}
+                  isMulti
+                  classNamePrefix="profileCardTagSelect"
+                  className="profileCardTagSelect"
+                  placeholder="Tags"
+                  onChange={(option) => handleTags(option)}
+                  value={tagOption}
+                  style={{
+                    width: '100%'
+                  }}
                   />
-              </ProfileCardFilterContainer>
-              <PriceInput
-                filterwidth={(8*sortOptions[0].label.length)}
-                placeholder="$ (max)"
-                onChange={(e) => handlePrice(e.target.value)}
-                value={price}
-                mask={numberMask}
-                type="search"/>
+              </ProfileCardTagSelect>
             </Fragment>
 
           }

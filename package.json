@@ -12,6 +12,7 @@
   "dependencies": {
     "babel-plugin-styled-components": "^1.8.0",
     "create-react-class": "^15.6.3",
+    "datafield": "^0.3.0",
     "ellipsize": "^0.1.0",
     "express": "^4.16.4",
     "firebase": "^5.5.6",

@@ -40,13 +40,19 @@ const SectionHeader = styled.h3`
 
 const Menu = ({items, sections, onItemClick}) => (
   <MenuContainer>
-    {sections.map((section) =>
+    {sections.map((section) => (
+      _.filter(items, ['section', section]).length > 0
+      ?
       <Section name={section} key={section}>
         <SectionHeader>
           {section}
         </SectionHeader>
         <ItemsList items={section === 'Results' ? items : _.filter(items, ['section', section])} onItemClick={(id) => onItemClick(id)}/>
       </Section>
+      :
+      null
+    )
+
     )}
   </MenuContainer>
 );
