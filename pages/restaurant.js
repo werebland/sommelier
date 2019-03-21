@@ -637,8 +637,8 @@ class Restaurant extends Component {
                 <Swiper
                   item={this.state.activeItem}
                   restaurant={this.props.restaurant}
-                  items={this.state.isSearching ? results : this.state.groupedItems[this.state.activeSection]}
-                  itemIndex={this.state.isSearching ? _.findIndex(results, { id: this.state.activeItem }) : _.findIndex(this.state.groupedItems[this.state.activeSection], { id: this.state.activeItem })}
+                  items={this.state.isSearching ? results : items.where('section').eq(this.state.activeSection).data}
+                  itemIndex={this.state.isSearching ? _.findIndex(results, { id: this.state.activeItem }) : _.findIndex(items.where('section').eq(this.state.activeSection).data, { id: this.state.activeItem })}
                   title={this.state.isSearching ? 'Results' : this.state.activeSection}
                   isVisible={this.state.activeItem !== ""}
                   handleCollapse={() => this.setState({ activeItem: "", overlayVisible: false })}
