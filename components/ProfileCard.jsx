@@ -92,8 +92,6 @@ const ProfileCardIcons = styled.div`
   align-items: center;
   justify-content: flex-start;
   height: 24px;
-  border-right: 1px solid #1f1f1f;
-  margin-right: 8px;
 `;
 
 const ProfileCardIcon = styled.i`
@@ -309,7 +307,6 @@ const ProfileCardTagSelect = styled.div`
     display: inline-flex;
     align-items: flex-start;
     box-sizing: border-box;
-    margin-bottom: 8px;
 
     & .profileCardTagSelect {
       width: 100%;
@@ -389,8 +386,13 @@ const ProfileCardTagSelect = styled.div`
     }
 `;
 
-
-
+const ProfileCardInteractions = styled.div`
+  display: flex;
+  flex: 1;
+  border-left: 1px solid #1f1f1f;
+  padding-left: 8px;
+  margin-bottom: 8px;
+`;
 
 const sortOptions = [
   {
@@ -515,55 +517,58 @@ const ProfileCard = React.forwardRef((props, ref) => {
             }
           </PoseGroup>
         </ProfileCardIcons>
-        <SectionsMenu
-          sections={sections}
-          activeSection={activeSection}
-          handleSetActive={(section) => handleSetActive(section)}
-          visible={!isSearching && !isFiltering}/>
-        <ProfileCardActions>
-          {isSearching &&
-            <ProfileCardSearchContainer>
-              <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
-            </ProfileCardSearchContainer>
-          }
-          {isFiltering &&
-            <Fragment>
-              <div style={{display: 'inline-flex', flexFlow: 'row wrap', width: '100%', marginBottom: '8px'}}>
-                <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
+        <ProfileCardInteractions>
+          <SectionsMenu
+            sections={sections}
+            activeSection={activeSection}
+            handleSetActive={(section) => handleSetActive(section)}
+            visible={!isSearching && !isFiltering}/>
+          <ProfileCardActions>
+            {isSearching &&
+              <ProfileCardSearchContainer>
+                <ProfileCardSearchInput type="search" placeholder="Search dishes" autoFocus onChange={(e) => handleSearch(e.target.value)}/>
+              </ProfileCardSearchContainer>
+            }
+            {isFiltering &&
+              <Fragment>
+                <div style={{display: 'inline-flex', flexFlow: 'row wrap', width: '100%', marginBottom: '8px'}}>
+                  <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
+                    <Select
+                      options={sortOptions}
+                      classNamePrefix="profileCardFilterSelect"
+                      placeholder="Sort"
+                      onChange={(option) => handleSort(option)}
+                      value={sortOption}
+                      />
+                  </ProfileCardFilterContainer>
+                  <PriceInput
+                    filterwidth={(8*sortOptions[0].label.length)}
+                    placeholder="$ (max)"
+                    onChange={(e) => handlePrice(e.target.value)}
+                    value={price}
+                    mask={numberMask}
+                    type="search"/>
+                </div>
+                <ProfileCardTagSelect>
                   <Select
-                    options={sortOptions}
-                    classNamePrefix="profileCardFilterSelect"
-                    placeholder="Sort"
-                    onChange={(option) => handleSort(option)}
-                    value={sortOption}
+                    options={tagOptions}
+                    isClearable
+                    classNamePrefix="profileCardTagSelect"
+                    className="profileCardTagSelect"
+                    placeholder="Tags"
+                    onChange={(option) => handleTags(option)}
+                    value={tagOption}
+                    style={{
+                      width: '100%'
+                    }}
                     />
-                </ProfileCardFilterContainer>
-                <PriceInput
-                  filterwidth={(8*sortOptions[0].label.length)}
-                  placeholder="$ (max)"
-                  onChange={(e) => handlePrice(e.target.value)}
-                  value={price}
-                  mask={numberMask}
-                  type="search"/>
-              </div>
-              <ProfileCardTagSelect>
-                <Select
-                  options={tagOptions}
-                  isMulti
-                  classNamePrefix="profileCardTagSelect"
-                  className="profileCardTagSelect"
-                  placeholder="Tags"
-                  onChange={(option) => handleTags(option)}
-                  value={tagOption}
-                  style={{
-                    width: '100%'
-                  }}
-                  />
-              </ProfileCardTagSelect>
-            </Fragment>
+                </ProfileCardTagSelect>
+              </Fragment>
 
-          }
-        </ProfileCardActions>
+            }
+          </ProfileCardActions>
+        </ProfileCardInteractions>
+
       </ProfileCardLower>
     </ProfileCardWrapper>
   )

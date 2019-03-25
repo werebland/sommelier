@@ -318,12 +318,13 @@ class Restaurant extends Component {
       isSticky: false,
       profileCardHeight: 149,
       windowHeight: 600,
-      tags: [],
       priceMax: 99999999,
+      sortOption: {},
       sortBy: {
         by: '',
         order: '',
-      }
+      },
+      tagOption: {}
     };
     this.profileCardRef = React.createRef()
   }
@@ -505,8 +506,10 @@ class Restaurant extends Component {
     })
   }
 
-  handleTags() {
-
+  handleTags(option) {
+    this.setState({
+      tagOption: option || {}
+    })
   }
 
   handleSetActive(section) {
@@ -583,13 +586,13 @@ class Restaurant extends Component {
           isSticky={this.state.isSticky}
           handleSort={(sortBy) => this.handleSort(sortBy)}
           handlePrice={(value) => value !== '' ? this.setState({ priceMax: _.trimStart(value, '$') }) : this.setState({ priceMax: 99999999 })}
-          sortOption={this.state.sortOption}
+          sortOption={Object.keys(this.state.sortOption).length > 0 ? this.state.tagOption : null}
           price={this.state.priceMax === 99999999 ? null : this.state.priceMax}
           ref={this.profileCardRef}
           height={this.state.profileCardHeight}
           tagOptions={tagOptions}
-          handleTags={(tags) => this.setState({ tags })}
-          tagOption={this.state.tags}
+          handleTags={(option) => this.handleTags(option)}
+          tagOption={this.state.tagOption && Object.keys(this.state.tagOption).length > 0 ? this.state.tagOption : null}
         />
         <Scroller>
           <NoSSR>
@@ -623,7 +626,7 @@ class Restaurant extends Component {
                     :
                     <Menu
                       sections={this.state.menu.sections}
-                      items={items.where('price').lt(this.state.priceMax).where('tags').includes().sort({by: this.state.sortBy.by, order: this.state.sortBy.order}).data}
+                      items={items.where('price').lt(this.state.priceMax).where('tags').includes(this.state.tagOption.value).sort({by: this.state.sortBy.by, order: this.state.sortBy.order}).data}
                       onItemClick={(id) => this.handleItemView(id)}/>
                   }
                 </Test>
