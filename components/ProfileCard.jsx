@@ -387,11 +387,13 @@ const ProfileCardTagSelect = styled.div`
 `;
 
 const ProfileCardInteractions = styled.div`
+  width: calc(100vw - 32px - 24px - 24px - 16px);
   display: flex;
   flex: 1;
   border-left: 1px solid #1f1f1f;
   padding-left: 8px;
   margin-bottom: 8px;
+  overflow: hidden;
 `;
 
 const sortOptions = [
