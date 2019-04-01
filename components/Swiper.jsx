@@ -87,7 +87,7 @@ const ItemSlideWrapper = styled.div`
   padding-right: 10px;
   color: #1f1f1f;
   margin-left: ${props => props.itemsLength == 1 ? '16px' : '0'};
-  overflow: scroll;
+  overflow: hidden;
 `;
 
 const ItemSlide = styled.div`
@@ -211,7 +211,7 @@ class Swiper extends Component {
   }
 
   componentWillUnmount() {
-    document.body.style.overflowY = 'auto'
+    document.getElementById('restaurantWrapper').style.overflowY = 'visible'
   }
 
   handleShare() {
@@ -234,9 +234,9 @@ class Swiper extends Component {
 
   render() {
     if (this.props.isVisible) {
-      document.body.style.overflowY = 'hidden'
+      document.getElementById('restaurantWrapper').style.overflowY = 'hidden'
     } else {
-      document.body.style.overflowY = 'auto'
+      document.getElementById('restaurantWrapper').style.overflowY = 'visible'
     }
 
     const settings = {

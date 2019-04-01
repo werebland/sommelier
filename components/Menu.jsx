@@ -23,6 +23,9 @@ const PosedMenuContainer = posed.article({
 
 const MenuContainer = styled(PosedMenuContainer)`
   padding-top: 12px;
+  background: #fff;
+  position: relative;
+  z-index: 4;
 `;
 
 const Section = styled(Element)`

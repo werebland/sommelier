@@ -21,7 +21,8 @@ import Menu from '../components/Menu'
 
 const RestaurantWrapper = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  overflow: visible;
   padding: 0;
   margin: 0;
   background: #fff;
@@ -324,7 +325,8 @@ class Restaurant extends Component {
         by: '',
         order: '',
       },
-      tagOption: {}
+      tagOption: {},
+      scrollDistance: 0,
     };
     this.profileCardRef = React.createRef()
   }
@@ -436,7 +438,8 @@ class Restaurant extends Component {
       this.setState({
         activeItem: id,
         results: result,
-        overlayVisible: true, })
+        overlayVisible: true,
+      })
     } else {
       this.setState({
         activeItem: id,
@@ -559,7 +562,7 @@ class Restaurant extends Component {
     let items = new DataField(this.state.items)
 
     return (
-      <RestaurantWrapper>
+      <RestaurantWrapper id="restaurantWrapper">
         <Head>
           <title>What to eat at {this.props.restaurant.name} - {this.props.restaurant.address.street}, {this.props.restaurant.address.city}</title>
           <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
@@ -593,6 +596,7 @@ class Restaurant extends Component {
           tagOptions={tagOptions}
           handleTags={(option) => this.handleTags(option)}
           tagOption={this.state.tagOption && Object.keys(this.state.tagOption).length > 0 ? this.state.tagOption : null}
+          scrollDistance={this.state.scrollDistance}
         />
         <Scroller>
           <NoSSR>
@@ -610,7 +614,7 @@ class Restaurant extends Component {
             }
           </NoSSR>
           <PoseGroup>
-            {this.state.isLoading && this.state.groupedItems
+            {this.state.isLoading && !this.state.groupedItems
               ?
                 <Loading key="0">
                   <span style={{ margin: 'auto'}}> Loading </span>

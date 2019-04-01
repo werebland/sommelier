@@ -80,7 +80,7 @@ class SectionsMenu extends Component {
     const { sections, activeSection, handleSetActive, visible } = this.props
 
     return (
-      <div style={{ overflow: 'hidden' }}>
+      <div style={{ overflow: 'hidden', width: 'calc(100vw - 32px - 24px - 24px - 64px)', display: visible ? 'flex' : 'none' }}>
         <ProfileCardSections ref={this.sectionsRef} visible={visible}>
           <PoseGroup key="1" preEnterPose='preEnter'>
             {sections.map((section, i) =>
