@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "babel-plugin-styled-components": "^1.8.0",
+    "body-scroll-lock": "^2.6.1",
     "create-react-class": "^15.6.3",
     "datafield": "^0.3.0",
     "ellipsize": "^0.1.0",

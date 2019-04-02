@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Slider from "react-slick";
 import posed, { PoseGroup } from 'react-pose';
 import _ from 'lodash'
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+
 import Sharer from './Sharer'
 
 const SwiperWrapper = styled.div`
@@ -208,10 +210,15 @@ class Swiper extends Component {
       isSharing: false,
       activeItem: {}
     }
+    this.targetElement = null;
+  }
+
+  componentDidMount() {
+    disableBodyScroll(this.targetElement);
   }
 
   componentWillUnmount() {
-    document.getElementById('restaurantWrapper').style.overflowY = 'visible'
+    enableBodyScroll(this.targetElement);
   }
 
   handleShare() {
@@ -233,11 +240,11 @@ class Swiper extends Component {
   }
 
   render() {
-    if (this.props.isVisible) {
-      document.getElementById('restaurantWrapper').style.overflowY = 'hidden'
-    } else {
-      document.getElementById('restaurantWrapper').style.overflowY = 'visible'
-    }
+    // if (this.props.isVisible) {
+    //   document.body.style.overflowY = 'hidden'
+    // } else {
+    //   document.body.style.overflowY = 'auto'
+    // }
 
     const settings = {
       dots: false,
