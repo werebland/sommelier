@@ -156,7 +156,6 @@ const ProfileCardSection = styled(PosedProfileCardSection)`
 `;
 
 const ProfileCardActions = styled.div`
-
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -388,7 +387,7 @@ const ProfileCardTagSelect = styled.div`
 
 const ProfileCardInteractions = styled.div`
   width: calc(100vw - 32px - 24px - 24px - 16px);
-  height: auto;
+  height: ${props => props.isFiltering ? 'auto' : '24px'};
   display: flex;
   flex: 1;
   border-left: 1px solid #1f1f1f;
@@ -519,7 +518,7 @@ const ProfileCard = React.forwardRef((props, ref) => {
             }
           </PoseGroup>
         </ProfileCardIcons>
-        <ProfileCardInteractions>
+        <ProfileCardInteractions isFiltering={isFiltering}>
           <SectionsMenu
             sections={sections}
             activeSection={activeSection}
