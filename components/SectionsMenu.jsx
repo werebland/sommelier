@@ -87,7 +87,7 @@ class SectionsMenu extends Component {
               {
                 this.refCollection[i] = React.createRef();
                 return (
-              <div key={section} ref={this.refCollection[i]}>
+              <div key={section} ref={this.refCollection[i]} style={{display: 'flex', height: '100%'}}>
                 <ProfileCardSection key={section} active={activeSection === section} >
                   <Link
                     activeClass="active"
