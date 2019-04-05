@@ -324,7 +324,8 @@ class Restaurant extends Component {
         by: '',
         order: '',
       },
-      tagOption: {}
+      tagOption: {},
+      tags: []
     };
     this.profileCardRef = React.createRef()
   }
@@ -354,7 +355,8 @@ class Restaurant extends Component {
     const profileCardHeight = this.profileCardRef.current.offsetHeight
     this.setState({
       profileCardHeight,
-      windowHeight: window.innerHeight
+      windowHeight: window.innerHeight,
+      tags: this.props.restaurant.tags
     })
     if (Object.keys(this.props.restaurant).length > 0) {
       this.fetchItems()
@@ -587,11 +589,11 @@ class Restaurant extends Component {
           isSticky={this.state.isSticky}
           handleSort={(sortBy) => this.handleSort(sortBy)}
           handlePrice={(value) => value !== '' ? this.setState({ priceMax: _.trimStart(value, '$') }) : this.setState({ priceMax: 99999999 })}
-          sortOption={Object.keys(this.state.sortOption).length > 0 ? this.state.tagOption : null}
+          sortOption={Object.keys(this.state.sortOption).length > 0 ? this.state.sortOption : null}
           price={this.state.priceMax === 99999999 ? null : this.state.priceMax}
           ref={this.profileCardRef}
           height={this.state.profileCardHeight}
-          tagOptions={tagOptions}
+          tags={this.state.tags || []}
           handleTags={(option) => this.handleTags(option)}
           tagOption={this.state.tagOption && Object.keys(this.state.tagOption).length > 0 ? this.state.tagOption : null}
         />
@@ -623,12 +625,16 @@ class Restaurant extends Component {
                     <Menu
                       sections={['Results']}
                       items={results}
-                      onItemClick={(id) => this.handleItemView(id)}/>
+                      onItemClick={(id) => this.handleItemView(id)}
+                      handleTag={(tag) => this.setState({ tagOption: { label: tag, value: tag }})}/>
                     :
                     <Menu
                       sections={this.state.menu.sections}
-                      items={items.where('price').lt(this.state.priceMax).where('tags').includes(this.state.tagOption.value).sort({by: this.state.sortBy.by, order: this.state.sortBy.order}).data}
-                      onItemClick={(id) => this.handleItemView(id)}/>
+                      items={items.where('price').lt(this.state.priceMax).sort({by: this.state.sortBy.by, order: this.state.sortBy.order}).data}
+                      tag={this.state.tagOption.value}
+                      handleTag={(tag) => this.setState({ tagOption: { label: tag, value: tag }})}
+                      onItemClick={(id) => this.handleItemView(id)}
+                      />
                   }
                 </Test>
             }

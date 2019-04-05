@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import posed, { PoseGroup } from 'react-pose'
 import ellipsize from 'ellipsize'
+import _ from 'lodash'
 
 const PosedItemsListContainer = posed.div({
   enter: {
@@ -74,6 +75,7 @@ const ItemCardImage = styled.div`
   background-image: url(${props => props.image});
   border-radius: 8px;
   margin-right: 8px;
+  cursor: pointer;
 `;
 
 const ItemCardContent = styled.div`
@@ -93,6 +95,7 @@ const ItemCardTitle = styled.h3`
   display: flex;
   justify-content: space-between;
   margin: 0;
+  cursor: pointer;
 
   & span {
     margin-left: 4px;
@@ -104,6 +107,12 @@ const ItemCardSubtitle = styled.h5`
   font-weight: 400;
   color: #9f9f9f;
   margin: 0;
+  display: flex;
+  justify-content: space-between;
+
+  & span {
+    color: #1f1f1f;
+  }
 `;
 
 const ItemCardDescription = styled.p`
@@ -114,13 +123,13 @@ const ItemCardDescription = styled.p`
   padding: 0;
 `;
 
-const ItemCard = ({ item, onItemClick }) => (
-  <ItemCardContainer onClick={() => onItemClick(item.id)}>
+const ItemCard = ({ item, onItemClick, handleTag }) => (
+  <ItemCardContainer>
     {item.image !== "" &&
-      <ItemCardImage image={item.image}/>
+      <ItemCardImage image={item.image} onClick={() => onItemClick(item.id)}/>
     }
     <ItemCardContent>
-      <ItemCardTitle>
+      <ItemCardTitle onClick={() => onItemClick(item.id)}>
         {item.name}
         <span>
           ${item.price.toFixed(2)}
@@ -128,6 +137,9 @@ const ItemCard = ({ item, onItemClick }) => (
       </ItemCardTitle>
       <ItemCardSubtitle>
         {item.section} · {item.type}
+        <span onClick={() => handleTag(item.tag)}>
+          {item.tag}
+        </span>
       </ItemCardSubtitle>
       <ItemCardDescription>
         {item.image === "" &&
@@ -145,12 +157,20 @@ const ItemCard = ({ item, onItemClick }) => (
   </ItemCardContainer>
 );
 
-const ItemsList = ({ items, onItemClick }) => (
+const ItemsList = ({ items, onItemClick, tag, handleTag }) => (
   <PoseGroup>
     <ItemsListContainer key="1">
-        {items.map((item) => (
-          <ItemCard item={item} key={item.id} onItemClick={(id) => onItemClick(id)}/>
-        ))}
+      {tag
+        ?
+        _.filter(items, ['tag', tag]).map((item) => (
+          <ItemCard item={item} key={item.id} onItemClick={(id) => onItemClick(id)} handleTag={(tag) => handleTag(tag)}/>
+        ))
+        :
+        items.map((item) => (
+          <ItemCard item={item} key={item.id} onItemClick={(id) => onItemClick(id)} handleTag={(tag) => handleTag(tag)}/>
+        ))
+      }
+
     </ItemsListContainer>
   </PoseGroup>
 

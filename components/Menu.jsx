@@ -38,14 +38,18 @@ const SectionHeader = styled.h3`
   color: #1f1f1f;
 `;
 
-const Menu = ({items, sections, onItemClick}) => (
+const Menu = ({ items, sections, onItemClick, tag, handleTag }) => (
   <MenuContainer>
     {sections.map((section) =>
       <Section name={section} key={section}>
         <SectionHeader>
           {section}
         </SectionHeader>
-        <ItemsList items={section === 'Results' ? items : _.filter(items, ['section', section])} onItemClick={(id) => onItemClick(id)}/>
+        <ItemsList
+          items={section === 'Results' ? items : _.filter(items, ['section', section])}
+          onItemClick={(id) => onItemClick(id)}
+          tag={tag}
+          handleTag={(tag) => handleTag(tag)}/>
       </Section>
     )}
   </MenuContainer>

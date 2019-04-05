@@ -306,6 +306,7 @@ const ProfileCardTagSelect = styled.div`
     display: inline-flex;
     align-items: flex-start;
     box-sizing: border-box;
+    margin-top: 8px;
 
     & .profileCardTagSelect {
       width: 100%;
@@ -436,7 +437,7 @@ const ProfileCard = React.forwardRef((props, ref) => {
         sortOption,
         height,
         price,
-        tagOptions,
+        tags,
         tagOption,
       } = props
 
@@ -444,6 +445,11 @@ const ProfileCard = React.forwardRef((props, ref) => {
       prefix: '$',
       suffix: '' // This will put the dollar sign at the end, with a space.
     })
+
+    const tagOptions = tags.map(v => ({
+      label: v,
+      value: v
+    }));
 
     return (
     <ProfileCardWrapper isSticky={isSticky} ref={ref} height={height}>
@@ -532,7 +538,7 @@ const ProfileCard = React.forwardRef((props, ref) => {
             }
             {isFiltering &&
               <Fragment>
-                <div style={{display: 'inline-flex', flexFlow: 'row wrap', width: '100%', marginBottom: '8px'}}>
+                <div style={{display: 'inline-flex', flexFlow: 'row wrap', width: '100%'}}>
                   <ProfileCardFilterContainer width={(8*sortOptions[0].label.length) + 16}>
                     <Select
                       options={sortOptions}
@@ -550,20 +556,22 @@ const ProfileCard = React.forwardRef((props, ref) => {
                     mask={numberMask}
                     type="search"/>
                 </div>
-                <ProfileCardTagSelect>
-                  <Select
-                    options={tagOptions}
-                    isClearable
-                    classNamePrefix="profileCardTagSelect"
-                    className="profileCardTagSelect"
-                    placeholder="Tags"
-                    onChange={(option) => handleTags(option)}
-                    value={tagOption}
-                    style={{
-                      width: '100%'
-                    }}
-                    />
-                </ProfileCardTagSelect>
+                {tags.length > 0 &&
+                  <ProfileCardTagSelect>
+                    <Select
+                      options={tagOptions}
+                      isClearable
+                      classNamePrefix="profileCardTagSelect"
+                      className="profileCardTagSelect"
+                      placeholder="Tags"
+                      onChange={(option) => handleTags(option)}
+                      value={tagOption}
+                      style={{
+                        width: '100%'
+                      }}
+                      />
+                  </ProfileCardTagSelect>
+                }
               </Fragment>
             }
           </ProfileCardActions>
