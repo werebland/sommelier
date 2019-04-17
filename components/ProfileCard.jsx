@@ -7,6 +7,7 @@ import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
 import SectionsMenu from './SectionsMenu'
+import Timings from './Timings'
 
 const ProfileCardWrapper = styled.div`
   width: calc(100vw - 40px);
@@ -51,7 +52,7 @@ const ProfileCardSubtitle = styled.h3`
   font-size: 1rem;
   font-weight: 400;
   color: #1f1f1f;
-  margin: 0 0 8px 0;
+  margin: 0;
 
   & a {
     text-decoration: none;
@@ -415,6 +416,13 @@ const sortOptions = [
   },
 ]
 
+const timings = [
+{  Wednesday: {
+    start: '8:00 am',
+    end: '5:00 pm'
+  }}
+]
+
 const ProfileCard = React.forwardRef((props, ref) => {
 
     const {
@@ -462,7 +470,10 @@ const ProfileCard = React.forwardRef((props, ref) => {
               href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.address.street}`}
               target="blank">{restaurant.address.street}.</a>
         </ProfileCardSubtitle>
-        <div>
+        {restaurant.timings &&
+          <Timings timings={restaurant.timings}/>
+        }
+        <div style={{ marginTop: '8px'}}>
           {restaurant.phone &&
             <ProfileCardButton
               target="blank"
