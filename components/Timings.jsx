@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 const TimingsWrapper = styled.div`
   position: relative;
@@ -50,7 +50,42 @@ class Timings extends Component {
     super(props);
     this.state = {
       expanded: false,
+      isOpen: true,
     }
+  }
+
+  componentDidMount() {
+    this.handleStatus()
+  }
+
+  handleStatus() {
+  const { timings, offset } = this.props
+  const day = moment().format('dddd')
+  const tmz = 'America/Halifax'
+  const format = 'HH:mm a'
+  const time = moment();
+  const timing = timings[day]
+
+  //it is simulated hour after midnight, but you can try with any time
+  let now = new Date();
+  let openTime = moment.tz(timing.open, format, tmz);
+  let closeTime = moment.tz(timing.close, format, tmz);
+  if(openTime.isBefore(closeTime)) {
+      //normal case
+      let isOpen = moment().isBetween(openTime, closeTime, null, "[]");
+      this.setState({
+        isOpen
+      })
+  } else {
+      /**
+       * First: Note how open and close times switched places
+       * Second: the ! in the boolean. If the time is between close and open time, it means the opposite, which is out of range.
+       */
+      let isOpen = !moment(now).isBetween(closeTime, openTime, null, "[]");
+      this.setState({
+        isOpen
+      })
+  }
   }
 
   render() {
@@ -100,7 +135,7 @@ class Timings extends Component {
           </TimingsExpander>
           :
           <Fragment>
-            {moment(now).isBetween(open, close)
+            {this.state.isOpen
               ?
               <TimingsCaption onClick={() => this.setState({ expanded: true })}>
                 <span><strong>Open</strong> until {timing.close}</span>

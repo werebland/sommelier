@@ -471,7 +471,7 @@ const ProfileCard = React.forwardRef((props, ref) => {
               target="blank">{restaurant.address.street}.</a>
         </ProfileCardSubtitle>
         {restaurant.timings &&
-          <Timings timings={restaurant.timings}/>
+          <Timings timings={restaurant.timings} offset={180}/>
         }
         <div style={{ marginTop: '8px'}}>
           {restaurant.phone &&
