@@ -16,6 +16,7 @@ const TimingsCaption = styled.div`
 
 const TimingsExpandIcon = styled.i`
   display: inline-flex;
+  align-items: flex-end;
 `;
 
 const TimingsExpander = styled.div`
@@ -70,21 +71,27 @@ class Timings extends Component {
   let now = new Date();
   let openTime = moment.tz(timing.open, format, tmz);
   let closeTime = moment.tz(timing.close, format, tmz);
-  if(openTime.isBefore(closeTime)) {
-      //normal case
-      let isOpen = moment().isBetween(openTime, closeTime, null, "[]");
-      this.setState({
-        isOpen
-      })
+  if (timing.isOpen) {
+    if(openTime.isBefore(closeTime)) {
+        //normal case
+        let isOpen = moment().isBetween(openTime, closeTime, null, "[]");
+        this.setState({
+          isOpen
+        })
+    } else {
+        /**
+         * First: Note how open and close times switched places
+         * Second: the ! in the boolean. If the time is between close and open time, it means the opposite, which is out of range.
+         */
+        let isOpen = !moment(now).isBetween(closeTime, openTime, null, "[]");
+        this.setState({
+          isOpen
+        })
+    }
   } else {
-      /**
-       * First: Note how open and close times switched places
-       * Second: the ! in the boolean. If the time is between close and open time, it means the opposite, which is out of range.
-       */
-      let isOpen = !moment(now).isBetween(closeTime, openTime, null, "[]");
-      this.setState({
-        isOpen
-      })
+    this.setState({
+      isOpen: false
+    })
   }
   }
 
@@ -105,25 +112,67 @@ class Timings extends Component {
           <TimingsExpander onClick={() => this.setState({ expanded: false })}>
             <TimingsList>
               <TimingsListItem active>
-                <span>{day}</span> <span>{timings[day].open} - {timings[day].close}</span>
+                <span>{day}</span>
+                {timings[day].isOpen
+                  ?
+                  <span>{timings[day].open} - {timings[day].close}</span>
+                  :
+                  <span>Closed</span>
+                }
               </TimingsListItem>
               <TimingsListItem>
-                <span>{moment().add(1, 'days').format('dddd')}</span> <span>{timings[moment().add(1, 'days').format('dddd')].open} - {timings[moment().add(1, 'days').format('dddd')].close}</span>
+                <span>{moment().add(1, 'days').format('dddd')}</span>
+                {timings[moment().add(1, 'days').format('dddd')].isOpen
+                  ?
+                  <span>{timings[moment().add(1, 'days').format('dddd')].open} - {timings[moment().add(1, 'days').format('dddd')].close}</span>
+                  :
+                  <span>Closed</span>
+                }
               </TimingsListItem>
               <TimingsListItem>
-                <span>{moment().add(2, 'days').format('dddd')}</span> <span>{timings[moment().add(2, 'days').format('dddd')].open} - {timings[moment().add(2, 'days').format('dddd')].close}</span>
+                <span>{moment().add(2, 'days').format('dddd')}</span>
+                {timings[moment().add(2, 'days').format('dddd')].isOpen
+                  ?
+                  <span>{timings[moment().add(2, 'days').format('dddd')].open} - {timings[moment().add(2, 'days').format('dddd')].close}</span>
+                  :
+                  <span>Closed</span>
+                }
               </TimingsListItem>
               <TimingsListItem>
-                <span>{moment().add(3, 'days').format('dddd')}</span> <span>{timings[moment().add(3, 'days').format('dddd')].open} - {timings[moment().add(3, 'days').format('dddd')].close}</span>
+                <span>{moment().add(3, 'days').format('dddd')}</span>
+                {timings[moment().add(3, 'days').format('dddd')].isOpen
+                  ?
+                  <span>{timings[moment().add(3, 'days').format('dddd')].open} - {timings[moment().add(3, 'days').format('dddd')].close}</span>
+                  :
+                  <span>Closed</span>
+                }
               </TimingsListItem>
               <TimingsListItem>
-                <span>{moment().add(4, 'days').format('dddd')}</span> <span>{timings[moment().add(4, 'days').format('dddd')].open} - {timings[moment().add(4, 'days').format('dddd')].close}</span>
+                <span>{moment().add(4, 'days').format('dddd')}</span>
+                {timings[moment().add(4, 'days').format('dddd')].isOpen
+                  ?
+                  <span>{timings[moment().add(4, 'days').format('dddd')].open} - {timings[moment().add(4, 'days').format('dddd')].close}</span>
+                  :
+                  <span>Closed</span>
+                }
               </TimingsListItem>
               <TimingsListItem>
-                <span>{moment().add(5, 'days').format('dddd')}</span> <span>{timings[moment().add(5, 'days').format('dddd')].open} - {timings[moment().add(5, 'days').format('dddd')].close}</span>
+                <span>{moment().add(5, 'days').format('dddd')}</span>
+                {timings[moment().add(5, 'days').format('dddd')].isOpen
+                  ?
+                  <span>{timings[moment().add(5, 'days').format('dddd')].open} - {timings[moment().add(5, 'days').format('dddd')].close}</span>
+                  :
+                  <span>Closed</span>
+                }
               </TimingsListItem>
               <TimingsListItem>
-                <span>{moment().add(6, 'days').format('dddd')}</span> <span>{timings[moment().add(6, 'days').format('dddd')].open} - {timings[moment().add(6, 'days').format('dddd')].close}</span>
+                <span>{moment().add(6, 'days').format('dddd')}</span>
+                {timings[moment().add(6, 'days').format('dddd')].isOpen
+                  ?
+                  <span>{timings[moment().add(6, 'days').format('dddd')].open} - {timings[moment().add(6, 'days').format('dddd')].close}</span>
+                  :
+                  <span>Closed</span>
+                }
               </TimingsListItem>
             </TimingsList>
             <TimingsExpandIcon style={{transform: 'rotateX(180deg)'}}>
@@ -148,7 +197,7 @@ class Timings extends Component {
               </TimingsCaption>
               :
               <TimingsCaption onClick={() => this.setState({ expanded: true })}>
-                <span><strong>Closed</strong> until {timing.open}</span>
+                <span><strong>Closed</strong> until {timings[moment().add(1, 'days').format('dddd')].open}</span>
                 <TimingsExpandIcon>
                   <svg width="24" height="24" viewBox="0 0 24 24">
                     <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>

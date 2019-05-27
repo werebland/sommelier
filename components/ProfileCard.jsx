@@ -69,12 +69,21 @@ const ProfileCardButton = styled.a`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #1f1f1f;
+  background: #000;
   border-radius: 8px;
   padding: 8px 16px;
   margin-bottom: 8px;
   margin-right: 8px;
   text-decoration: none;
+  border: 1px solid #000;
+  transition: background 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, border-color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms, color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+
+  &:hover {
+    background: transparent;
+    border-color: rgba(0,0,0,1);
+    color: rgba(0,0,0,1);
+  }
+
 `;
 
 const ProfileCardLower = styled.div`

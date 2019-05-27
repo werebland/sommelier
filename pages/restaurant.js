@@ -521,6 +521,14 @@ class Restaurant extends Component {
     })
   }
 
+  handleMenuSelect(option) {
+    const menu = option.value
+    this.setState({
+      menu,
+      activeSection: menu.sections[0]
+    })
+  }
+
   render() {
 
     if (Object.keys(this.props.restaurant).length === 0) {
@@ -607,7 +615,7 @@ class Restaurant extends Component {
                   options={menuOptions}
                   isClearable={false}
                   isSearchable={false}
-                  onChange={(option) => this.setState({menu: option.value})}
+                  onChange={(option) => this.handleMenuSelect(option)}
                   value={menuOptions.filter(({value}) => value === this.state.menu)} />
               </MenuSelectContainer>
             }
@@ -634,6 +642,7 @@ class Restaurant extends Component {
                       tag={this.state.tagOption.value}
                       handleTag={(tag) => this.setState({ tagOption: { label: tag, value: tag }})}
                       onItemClick={(id) => this.handleItemView(id)}
+                      isLoading={this.state.isLoading}
                       />
                   }
                 </Test>

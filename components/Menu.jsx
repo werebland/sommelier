@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash'
 import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
@@ -38,20 +38,27 @@ const SectionHeader = styled.h3`
   color: #1f1f1f;
 `;
 
-const Menu = ({ items, sections, onItemClick, tag, handleTag }) => (
+const Menu = ({ items, sections, onItemClick, tag, handleTag, isLoading }) => (
   <MenuContainer>
-    {sections.map((section) =>
-      <Section name={section} key={section}>
-        <SectionHeader>
-          {section}
-        </SectionHeader>
-        <ItemsList
-          items={section === 'Results' ? items : _.filter(items, ['section', section])}
-          onItemClick={(id) => onItemClick(id)}
-          tag={tag}
-          handleTag={(tag) => handleTag(tag)}/>
-      </Section>
-    )}
+    {isLoading
+      ?
+        <span>Loading...</span>
+      :
+        <Fragment>
+          {sections.map((section) =>
+            <Section name={section} key={section}>
+              <SectionHeader>
+                {section}
+              </SectionHeader>
+              <ItemsList
+                items={section === 'Results' ? items : _.filter(items, ['section', section])}
+                onItemClick={(id) => onItemClick(id)}
+                tag={tag}
+                handleTag={(tag) => handleTag(tag)}/>
+            </Section>
+          )}
+        </Fragment>
+    }
   </MenuContainer>
 );
 

@@ -82,32 +82,30 @@ class SectionsMenu extends Component {
     return (
       <div style={{ overflow: 'hidden', width: 'calc(100vw - 32px - 24px - 24px - 64px)', display: visible ? 'flex' : 'none' }}>
         <ProfileCardSections ref={this.sectionsRef} visible={visible}>
-          <PoseGroup key="1" preEnterPose='preEnter'>
-            {sections.map((section, i) =>
-              {
-                this.refCollection[i] = React.createRef();
-                return (
-              <div key={section} ref={this.refCollection[i]} style={{display: 'flex', height: '100%'}} className="test">
-                <ProfileCardSection key={section} active={activeSection === section} >
-                  <Link
-                    activeClass="active"
-                    onClick={() => handleSetActive(section)}
-                    to={section}
-                    spy={true}
-                    smooth={true}
-                    offset={-52}
-                    duration={500}
-                    onSetActive={() => this.processSetActive(section, i)}
-                  >
-                      {section}
-                    </Link>
-                </ProfileCardSection>
-              </div>
-            )
-          }
+          {sections.map((section, i) =>
+            {
+              this.refCollection[i] = React.createRef();
+              return (
+            <div key={section} ref={this.refCollection[i]} style={{display: 'flex', height: '100%'}} className="test">
+              <ProfileCardSection key={section} active={activeSection === section} >
+                <Link
+                  activeClass="active"
+                  onClick={() => handleSetActive(section)}
+                  to={section}
+                  spy={true}
+                  smooth={true}
+                  offset={-52}
+                  duration={500}
+                  onSetActive={() => this.processSetActive(section, i)}
+                >
+                    {section}
+                  </Link>
+              </ProfileCardSection>
+            </div>
+          )
+        }
 
-            )}
-          </PoseGroup>
+          )}
           <div style={{ width: 16, display: 'inline-flex', minWidth: 16 }}>
           </div>
         </ProfileCardSections>
