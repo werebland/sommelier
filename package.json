@@ -15,7 +15,7 @@
     "create-react-class": "^15.6.3",
     "datafield": "^0.3.0",
     "ellipsize": "^0.1.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "firebase": "^5.5.6",
     "fuse.js": "^3.3.0",
     "lodash": "^4.17.11",
